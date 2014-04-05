@@ -47,8 +47,11 @@ public class Login extends Activity implements OnClickListener {
 	// "http://www.yourdomain.com/webservice/login.php";
 
 	// JSON element ids from repsonse of php script:
-	private static final String TAG_SUCCESS = "success";
-	private static final String TAG_MESSAGE = "message";
+	private static final String TAG_SUCCESS = "ok";
+	private static final String TAG_NUSP = "nusp";
+	private static final String TAG_USERNAME = "username";
+	private static final String TAG_EMAIL = "email";
+	private static final String TAG_ERROR = "error";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +84,6 @@ public class Login extends Activity implements OnClickListener {
 	}
 
 	class AttemptLogin extends AsyncTask<String, String, String> {
-
 		/**
 		 * Before starting background thread Show Progress Dialog
 		 * */
@@ -101,7 +103,7 @@ public class Login extends Activity implements OnClickListener {
 		protected String doInBackground(String... args) {
 			// TODO Auto-generated method stub
 			// Check for success tag
-			int success;
+			boolean success;
 			String username = user.getText().toString();
 			String password = pass.getText().toString();
 			try {
@@ -109,7 +111,6 @@ public class Login extends Activity implements OnClickListener {
 				ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 				params.add(new BasicNameValuePair("usp_id", username));
 				params.add(new BasicNameValuePair("password", password));
-				params.add(new BasicNameValuePair("--insecure", ""));
 
 				Log.d("request!", "starting");
 				// getting product details by making HTTP request
@@ -123,16 +124,16 @@ public class Login extends Activity implements OnClickListener {
 				Log.d("Login attempt", json.toString());
 
 				// json success tag
-				success = json.getInt(TAG_SUCCESS);
-				if (success == 1) {
+				success = json.getBoolean(TAG_SUCCESS);
+				if (success) {
 					Log.d("Login Successful!", json.toString());
 					Intent i = new Intent(Login.this, Logado.class);
 					finish();
 					startActivity(i);
-					return json.getString(TAG_MESSAGE);
+					return json.getString(TAG_USERNAME);
 				} else {
-					Log.d("Login Failure!", json.getString(TAG_MESSAGE));
-					return json.getString(TAG_MESSAGE);
+					Log.d("Login Failure!", json.getString(TAG_ERROR));
+					return json.getString(TAG_ERROR);
 
 				}
 			} catch (JSONException e) {
