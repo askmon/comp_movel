@@ -22,7 +22,7 @@ import android.widget.Toast;
 public class Login extends Activity implements OnClickListener{
 
 	private EditText user, pass;
-	private Button mSubmit, mRegister;
+	private Button mSubmit;
 
 	 // Progress Dialog
     private ProgressDialog pDialog;
@@ -63,8 +63,6 @@ public class Login extends Activity implements OnClickListener{
 
 		//register listeners
 		mSubmit.setOnClickListener(this);
-		mRegister.setOnClickListener(this);
-
 	}
 
 	@Override
@@ -90,11 +88,11 @@ public class Login extends Activity implements OnClickListener{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(Login.this);
+            pDialog = new ProgressDialog(Login.this.getApplicationContext());
             pDialog.setMessage("Attempting login...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
-            pDialog.show();
+            //pDialog.show();
         }
 
 		@Override

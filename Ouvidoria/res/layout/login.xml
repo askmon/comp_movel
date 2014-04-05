@@ -2,16 +2,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".Login" >
+   >
+
+    <Button
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/login"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/login"
+        android:layout_marginBottom="25dp"
+        android:text="Sair" />
 
     <Button
         android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/register"
         android:layout_alignLeft="@+id/password"
         android:layout_alignRight="@+id/password"
         android:text="Login" />
@@ -36,10 +43,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="17dp"
         android:gravity="center"
-        android:text="Ouvidoria USP"
+        android:text="Aplicativo Ouvidoria"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold" />
-
 
     <TextView
         android:id="@+id/TextView01"
@@ -48,7 +54,7 @@
         android:layout_above="@+id/password"
         android:layout_alignLeft="@+id/password"
         android:layout_marginLeft="22dp"
-        android:text="Senha" />
+        android:text="Password" />
 
     <EditText
         android:id="@+id/username"
@@ -64,7 +70,6 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/TextView01"
         android:layout_centerVertical="true"
-        android:text="Usuario" />
+        android:text="Username" />
 
 </RelativeLayout>
-
