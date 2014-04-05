@@ -6,6 +6,11 @@
     -->
     <style name="Theme.USP" parent="android:Theme.Holo.Light">
         <!-- API 11 theme customizations can go here. -->
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.USP</item>
+    </style>
+    
+    <style name="ActionBar.Solid.USP" parent="@android:style/Widget.ActionBar">
+        <item name="android:background">@drawable/ab_banner_usp</item>
     </style>
 
 </resources>
