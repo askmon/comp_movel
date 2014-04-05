@@ -4,13 +4,8 @@
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
     -->
-    <style name="Theme.USP" parent="android:Theme.Light">
+    <style name="Theme.USP" parent="android:Theme.Holo.Light">
         <!-- API 11 theme customizations can go here. -->
-        <item name="android:actionBarStyle">@style/ActionBar.Solid.USP</item>
-    </style>
-    
-    <style name="ActionBar.Solid.Usp" parent="@android:style/Widget.Light.ActionBar.Solid">
-        <item name="android:background">@drawable/ab_banner_usp</item>
     </style>
 
 </resources>
