@@ -20,7 +20,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="text|textPassword" />
+        android:inputType="text">
+        <requestFocus />
+    </EditText>
 
     <TextView
         android:id="@+id/TextView01"
@@ -33,10 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPassword" >
-
-        <requestFocus />
-    </EditText>
+        android:inputType="textPassword" />
 
     <TextView
         android:id="@+id/textView1"

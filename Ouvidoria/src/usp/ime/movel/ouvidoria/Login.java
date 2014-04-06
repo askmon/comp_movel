@@ -83,7 +83,7 @@ public class Login extends Activity implements OnClickListener {
 		}
 	}
 
-	class AttemptLogin extends AsyncTask<String, String, String> {
+	class AttemptLogin extends AsyncTask<String, String, JSONObject> {
 		/**
 		 * Before starting background thread Show Progress Dialog
 		 * */
@@ -100,58 +100,59 @@ public class Login extends Activity implements OnClickListener {
 		}
 
 		@Override
-		protected String doInBackground(String... args) {
+		protected JSONObject doInBackground(String... args) {
 			// TODO Auto-generated method stub
-			// Check for success tag
-			boolean success;
 			String username = user.getText().toString();
 			String password = pass.getText().toString();
-			try {
-				// Building Parameters
-				ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-				params.add(new BasicNameValuePair("usp_id", username));
-				params.add(new BasicNameValuePair("password", password));
+			// Building Parameters
+			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("usp_id", username));
+			params.add(new BasicNameValuePair("password", password));
 
-				Log.d("request!", "starting");
-				// getting product details by making HTTP request
-				JSONObject json = jsonParser.makeHttpRequest(LOGIN_URL, "POST",
-						params);
-
-				if (json == null) {
-					return null;
-				}
-				// check your log for json response
-				Log.d("Login attempt", json.toString());
-
-				// json success tag
-				success = json.getBoolean(TAG_SUCCESS);
-				if (success) {
-					Log.d("Login Successful!", json.toString());
-					Intent i = new Intent(Login.this, Logado.class);
-					finish();
-					startActivity(i);
-					return json.getString(TAG_USERNAME);
-				} else {
-					Log.d("Login Failure!", json.getString(TAG_ERROR));
-					return json.getString(TAG_ERROR);
-
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-
-			return null;
+			Log.d("request!", "starting");
+			// getting product details by making HTTP request
+			return jsonParser.makeHttpRequest(LOGIN_URL, "POST", params);
 
 		}
 
 		/**
 		 * After completing background task Dismiss the progress dialog
 		 * **/
-		protected void onPostExecute(String file_url) {
+		protected void onPostExecute(JSONObject resultMessage) {
 			// dismiss the dialog once product deleted
 			pDialog.dismiss();
-			if (file_url != null) {
-				Toast.makeText(Login.this, file_url, Toast.LENGTH_LONG).show();
+			if (resultMessage == null) {
+				return;
+			}
+
+			boolean success;
+			String message;
+
+			try {
+				Log.d("Login attempt", resultMessage.toString());
+
+				// json success tag
+				success = resultMessage.getBoolean(TAG_SUCCESS);
+
+				if (success) {
+					Log.d("Login Successful!", resultMessage.toString());
+					message = "Entrou como "
+							+ resultMessage.getString(TAG_USERNAME);
+				} else {
+					Log.d("Login Failure!", resultMessage.getString(TAG_ERROR));
+					message = resultMessage.getString(TAG_ERROR);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return;
+			}
+
+			Toast.makeText(Login.this, message, Toast.LENGTH_LONG).show();
+
+			if (success) {
+				Intent i = new Intent(Login.this, Logado.class);
+				finish();
+				startActivity(i);
 			}
 
 		}

@@ -8,5 +8,7 @@
     <string name="input_pass">Senha</string>
     <string name="action_login">Entrar</string>
     <string name="action_exit">Sair</string>
+    <string name="title_logado">Logado</string>
+    <string name="text_success">SUCESSO!!</string>
 
 </resources>
