@@ -2,7 +2,11 @@
 <resources>
 
     <string name="app_name">Ouvidoria</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Configurações</string>
+    <string name="title_welcome">Bem-vindo à Ouvidoria USP!</string>
+    <string name="input_user">Usuário/NUSP</string>
+    <string name="input_pass">Senha</string>
+    <string name="action_login">Entrar</string>
+    <string name="action_exit">Sair</string>
 
 </resources>
