@@ -89,15 +89,15 @@ public class Login extends Activity implements OnClickListener {
 		 * */
 		boolean failure = false;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(Login.this.getApplicationContext());
-            pDialog.setMessage("Attempting login...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            //pDialog.show();
-        }
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pDialog = new ProgressDialog(Login.this.getApplicationContext());
+			pDialog.setMessage("Attempting login...");
+			pDialog.setIndeterminate(false);
+			pDialog.setCancelable(true);
+			// pDialog.show();
+		}
 
 		@Override
 		protected String doInBackground(String... args) {

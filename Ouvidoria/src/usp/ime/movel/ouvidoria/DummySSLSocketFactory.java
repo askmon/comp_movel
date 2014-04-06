@@ -16,6 +16,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+//Código disponível em http://madurangasblogs.blogspot.com.br/2013/08/avoiding-javaxnetsslsslpeerunverifiedex.html
 public class DummySSLSocketFactory extends SSLSocketFactory {
 	SSLContext sslContext = SSLContext.getInstance("TLS");
 
