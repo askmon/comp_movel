@@ -52,7 +52,8 @@ public class Login extends Activity implements OnClickListener {
 	private static final String TAG_USERNAME = "username";
 	private static final String TAG_EMAIL = "email";
 	private static final String TAG_ERROR = "error";
-
+	private String name_user;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -138,6 +139,7 @@ public class Login extends Activity implements OnClickListener {
 					Log.d("Login Successful!", resultMessage.toString());
 					message = "Entrou como "
 							+ resultMessage.getString(TAG_USERNAME);
+					name_user = resultMessage.getString(TAG_USERNAME);
 				} else {
 					Log.d("Login Failure!", resultMessage.getString(TAG_ERROR));
 					message = resultMessage.getString(TAG_ERROR);
@@ -151,6 +153,7 @@ public class Login extends Activity implements OnClickListener {
 
 			if (success) {
 				Intent i = new Intent(Login.this, Logado.class);
+				i.putExtra("username", name_user);
 				finish();
 				startActivity(i);
 			}

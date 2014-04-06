@@ -28,6 +28,10 @@
             android:name="usp.ime.movel.ouvidoria.Logado"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="usp.ime.movel.ouvidoria.Registrar"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>
