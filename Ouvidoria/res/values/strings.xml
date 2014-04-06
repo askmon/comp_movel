@@ -12,5 +12,6 @@
     <string name="text_success">SUCESSO!!</string>
     <string name="username">Nome do usuário</string>
     <string name="action_register">Nova ocorrência</string>
+    <string name="picture">Tirar Foto</string>
 
 </resources>
