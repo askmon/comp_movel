@@ -13,5 +13,8 @@
     <string name="username">Nome do usuário</string>
     <string name="action_register">Nova ocorrência</string>
     <string name="picture">Tirar Foto</string>
+    <string name="description_string">Descrição</string>
+    <string name="location_string">Local</string>
+    <string name="enviar">Enviar</string>
 
 </resources>

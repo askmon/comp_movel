@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,8 @@ public class Registrar extends Activity implements OnClickListener {
 	private Intent intent;
 	private String username;
 	private Button mPicture;
+	private EditText location;
+	private EditText description;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,8 @@ public class Registrar extends Activity implements OnClickListener {
 		username = intent.getStringExtra("username");
 		TextView user = (TextView)findViewById(R.id.textView1);
 		user.setText("Usuário: " + username);
+		description = (EditText) findViewById(R.id.description);
+		location = (EditText) findViewById(R.id.location);
 		mPicture = (Button) findViewById(R.id.picture);
 		mPicture.setOnClickListener(this);
 	}
