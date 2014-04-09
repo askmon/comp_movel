@@ -6,26 +6,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import javax.crypto.spec.IvParameterSpec;
-
-import usp.ime.movel.ouvidoria.Login.AttemptLogin;
-import android.media.Image;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 public class Registrar extends Activity implements OnClickListener {
 
@@ -42,7 +36,7 @@ public class Registrar extends Activity implements OnClickListener {
 		intent = getIntent();
 		username = intent.getStringExtra("username");
 		TextView user = (TextView)findViewById(R.id.textView1);
-		user.setText("Usu·rio: " + username);
+		user.setText("Usu√°rio: " + username);
 		description = (EditText) findViewById(R.id.description);
 		location = (EditText) findViewById(R.id.location);
 		mPicture = (Button) findViewById(R.id.picture);

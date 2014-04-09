@@ -1,13 +1,12 @@
 package usp.ime.movel.ouvidoria;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.app.Activity;
-import android.content.Intent;
 
 public class Logado extends Activity implements OnClickListener {
 
@@ -22,7 +21,7 @@ public class Logado extends Activity implements OnClickListener {
 		intent = getIntent();
 		username = intent.getStringExtra("username");
 		TextView user = (TextView)findViewById(R.id.textView1);
-		user.setText("Usu·rio: " + username);
+		user.setText("Usu√°rio: " + username);
 		mRegister = (Button) findViewById(R.id.register);
 		mRegister.setOnClickListener(this);
 	}
