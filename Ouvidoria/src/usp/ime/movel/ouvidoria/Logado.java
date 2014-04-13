@@ -12,6 +12,7 @@ public class Logado extends Activity implements OnClickListener {
 
 	private Intent intent;
 	private String username;
+	private String uspid;
 	private Button mRegister;
 	
 	@Override
@@ -20,6 +21,7 @@ public class Logado extends Activity implements OnClickListener {
 		setContentView(R.layout.logado);
 		intent = getIntent();
 		username = intent.getStringExtra("username");
+		uspid = intent.getStringExtra("uspid");
 		TextView user = (TextView)findViewById(R.id.textView1);
 		user.setText("Usuário: " + username);
 		mRegister = (Button) findViewById(R.id.register);
@@ -31,6 +33,7 @@ public class Logado extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		Intent i = new Intent(Logado.this, Registrar.class);
 		i.putExtra("username", username);
+		i.putExtra("uspid", uspid);
 		finish();
 		startActivity(i);
 	}

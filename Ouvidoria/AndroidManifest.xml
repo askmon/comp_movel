@@ -16,7 +16,7 @@
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
         android:targetPackage="usp.ime.movel.ouvidoria" />
-    <uses-permission android:name=""/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"

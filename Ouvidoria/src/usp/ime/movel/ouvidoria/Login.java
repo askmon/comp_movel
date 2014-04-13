@@ -53,6 +53,7 @@ public class Login extends Activity implements OnClickListener {
 	private static final String TAG_EMAIL = "email";
 	private static final String TAG_ERROR = "error";
 	private String name_user;
+	private String uspid;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +105,7 @@ public class Login extends Activity implements OnClickListener {
 		protected JSONObject doInBackground(String... args) {
 			// TODO Auto-generated method stub
 			String username = user.getText().toString();
+			uspid = username;
 			String password = pass.getText().toString();
 			// Building Parameters
 			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -154,6 +156,7 @@ public class Login extends Activity implements OnClickListener {
 			if (success) {
 				Intent i = new Intent(Login.this, Logado.class);
 				i.putExtra("username", name_user);
+				i.putExtra("uspid", uspid);
 				finish();
 				startActivity(i);
 			}
