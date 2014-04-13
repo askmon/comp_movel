@@ -7,9 +7,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,13 +24,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Registrar extends Activity implements OnClickListener {
 
 	private Intent intent;
 	private String username;
 	private Button mPicture;
-	private EditText location;
+	private Button mGPS;
+	private EditText locationt;
 	private EditText description;
 	
 	@Override
@@ -36,13 +42,37 @@ public class Registrar extends Activity implements OnClickListener {
 		intent = getIntent();
 		username = intent.getStringExtra("username");
 		TextView user = (TextView)findViewById(R.id.textView1);
-		user.setText("UsuÃ¡rio: " + username);
+		user.setText("Usuário: " + username);
 		description = (EditText) findViewById(R.id.description);
-		location = (EditText) findViewById(R.id.location);
+		locationt = (EditText) findViewById(R.id.location);
 		mPicture = (Button) findViewById(R.id.picture);
+		mPicture.setOnClickListener(this);
+		mPicture = (Button) findViewById(R.id.gps);
 		mPicture.setOnClickListener(this);
 	}
 
+	public void getLocation(){
+		LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		LocationListener locationListener = new LocationListener() {
+    	    public void onLocationChanged(Location location) {
+    	    	Double latPoint = location.getLatitude();
+    	    	Double longiPoint = location.getLongitude();
+    			TextView lat = (TextView)findViewById(R.id.lat);
+    			lat.setText("Latitude: " + latPoint.toString());
+    			TextView longi = (TextView)findViewById(R.id.longi);
+    			longi.setText("Longitude: " + longiPoint.toString());
+    	    }
+
+    	    public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+    	    public void onProviderEnabled(String provider) {}
+
+    	    public void onProviderDisabled(String provider) {}
+    	  };
+
+    	  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+    }
+	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -53,6 +83,11 @@ public class Registrar extends Activity implements OnClickListener {
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
 			System.out.println("Primeiro " + Uri.fromFile(f));
 			startActivityForResult(intent, 1);
+			break;
+			
+		case R.id.gps:
+			Toast.makeText(Registrar.this, "Obtendo localização", Toast.LENGTH_LONG).show();
+				getLocation();
 			break;
 
 		default:

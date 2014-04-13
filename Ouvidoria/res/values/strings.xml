@@ -16,5 +16,6 @@
     <string name="description_string">Descrição</string>
     <string name="location_string">Local</string>
     <string name="enviar">Enviar</string>
+    <string name="gps">Adicionar local via GPS</string>
 
 </resources>
