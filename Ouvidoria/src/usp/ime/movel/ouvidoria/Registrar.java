@@ -42,7 +42,7 @@ public class Registrar extends Activity implements OnClickListener {
 		intent = getIntent();
 		username = intent.getStringExtra("username");
 		TextView user = (TextView)findViewById(R.id.textView1);
-		user.setText("Usu·rio: " + username);
+		user.setText("Usu√°rio: " + username);
 		description = (EditText) findViewById(R.id.description);
 		locationt = (EditText) findViewById(R.id.location);
 		mPicture = (Button) findViewById(R.id.picture);
@@ -86,7 +86,7 @@ public class Registrar extends Activity implements OnClickListener {
 			break;
 			
 		case R.id.gps:
-			Toast.makeText(Registrar.this, "Obtendo localizaÁ„o", Toast.LENGTH_LONG).show();
+			Toast.makeText(Registrar.this, "Obtendo localiza√ß√£o", Toast.LENGTH_LONG).show();
 				getLocation();
 			break;
 

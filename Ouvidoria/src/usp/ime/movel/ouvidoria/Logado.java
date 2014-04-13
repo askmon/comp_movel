@@ -21,14 +21,13 @@ public class Logado extends Activity implements OnClickListener {
 		intent = getIntent();
 		username = intent.getStringExtra("username");
 		TextView user = (TextView)findViewById(R.id.textView1);
-		user.setText("Usu·rio: " + username);
+		user.setText("Usu√°rio: " + username);
 		mRegister = (Button) findViewById(R.id.register);
 		mRegister.setOnClickListener(this);
 	}
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		Intent i = new Intent(Logado.this, Registrar.class);
 		i.putExtra("username", username);
 		finish();

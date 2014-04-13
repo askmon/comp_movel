@@ -8,7 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,9 +22,6 @@ public class Login extends Activity implements OnClickListener {
 
 	private EditText user, pass;
 	private Button mSubmit;
-
-	// Progress Dialog
-	private ProgressDialog pDialog;
 
 	// JSON parser class
 	JSONparser jsonParser = new JSONparser();
@@ -56,7 +52,6 @@ public class Login extends Activity implements OnClickListener {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 
@@ -85,24 +80,10 @@ public class Login extends Activity implements OnClickListener {
 	}
 
 	class AttemptLogin extends AsyncTask<String, String, JSONObject> {
-		/**
-		 * Before starting background thread Show Progress Dialog
-		 * */
 		boolean failure = false;
 
 		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			pDialog = new ProgressDialog(Login.this.getApplicationContext());
-			pDialog.setMessage("Attempting login...");
-			pDialog.setIndeterminate(false);
-			pDialog.setCancelable(true);
-			// pDialog.show();
-		}
-
-		@Override
 		protected JSONObject doInBackground(String... args) {
-			// TODO Auto-generated method stub
 			String username = user.getText().toString();
 			String password = pass.getText().toString();
 			// Building Parameters
@@ -116,12 +97,7 @@ public class Login extends Activity implements OnClickListener {
 
 		}
 
-		/**
-		 * After completing background task Dismiss the progress dialog
-		 * **/
 		protected void onPostExecute(JSONObject resultMessage) {
-			// dismiss the dialog once product deleted
-			pDialog.dismiss();
 			if (resultMessage == null) {
 				return;
 			}
@@ -157,9 +133,6 @@ public class Login extends Activity implements OnClickListener {
 				finish();
 				startActivity(i);
 			}
-
 		}
-
 	}
-
 }
