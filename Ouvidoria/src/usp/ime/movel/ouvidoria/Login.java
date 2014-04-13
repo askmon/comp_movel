@@ -156,7 +156,7 @@ public class Login extends Activity implements OnClickListener {
 			if (success) {
 				Intent i = new Intent(Login.this, Logado.class);
 				i.putExtra("username", name_user);
-				i.putExtra("usp_id", uspid);
+				i.putExtra("uspid", uspid);
 				finish();
 				startActivity(i);
 			}

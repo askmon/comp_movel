@@ -33,7 +33,7 @@ public class Logado extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		Intent i = new Intent(Logado.this, Registrar.class);
 		i.putExtra("username", username);
-		i.putExtra("username", uspid);
+		i.putExtra("uspid", uspid);
 		finish();
 		startActivity(i);
 	}
