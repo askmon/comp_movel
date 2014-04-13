@@ -58,7 +58,7 @@ public class Registrar extends Activity implements OnClickListener {
 		intent = getIntent();
 		username = intent.getStringExtra("uspid");
 		TextView user = (TextView)findViewById(R.id.textView1);
-		user.setText("Usu·rio: " + username);
+		user.setText("Usu√°rio: " + username);
 		description = (EditText) findViewById(R.id.description);
 		localization = (EditText) findViewById(R.id.location);
 		mPicture = (Button) findViewById(R.id.picture);
@@ -113,6 +113,7 @@ public class Registrar extends Activity implements OnClickListener {
 		case R.id.enviar:
 			Toast.makeText(Registrar.this, "Enviando", Toast.LENGTH_LONG).show();
 			new AttemptSend().execute();
+
 			break;
 
 		default:

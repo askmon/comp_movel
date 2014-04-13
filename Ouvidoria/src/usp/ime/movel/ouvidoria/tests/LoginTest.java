@@ -1,8 +1,12 @@
 package usp.ime.movel.ouvidoria.tests;
 
+import usp.ime.movel.ouvidoria.Logado;
 import usp.ime.movel.ouvidoria.Login;
 import usp.ime.movel.ouvidoria.R;
+import android.app.Instrumentation.ActivityMonitor;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.TouchUtils;
+import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,16 +38,57 @@ public class LoginTest extends ActivityInstrumentationTestCase2<Login>{
 	    assertNotNull("passwordEditText is null", passwordEditText);
 	    assertNotNull("submitButton is null", submitButton);
 	}
-	
+
 	public void testUsernameTextView_labelText() {
 		final String expected = loginActivity.getString(R.string.input_user);
 		final String actual = usernameTextView.getText().toString();
 		assertEquals(expected, actual);
 	}
-	
+
 	public void testPasswordTextView_labelText() {
 		final String expected = loginActivity.getString(R.string.input_pass);
 		final String actual = passwordTextView.getText().toString();
 		assertEquals(expected, actual);
+	}
+
+	@MediumTest
+	public void testSendMessageToLogadoActivity() {
+		// Set up an ActivityMonitor
+		ActivityMonitor logadoMonitor =
+		        getInstrumentation().addMonitor(Logado.class.getName(),
+		        null, false);
+
+		// Send string input value
+		getInstrumentation().runOnMainSync(new Runnable() {
+		    @Override
+		    public void run() {
+		        userEditText.requestFocus();
+		    }
+		});
+		getInstrumentation().waitForIdleSync();
+		getInstrumentation().sendStringSync("7157092");
+		getInstrumentation().waitForIdleSync();
+
+		getInstrumentation().runOnMainSync(new Runnable() {
+		    @Override
+		    public void run() {
+		        passwordEditText.requestFocus();
+		    }
+		});
+		getInstrumentation().waitForIdleSync();
+		getInstrumentation().sendStringSync("DiegoUSP");
+		getInstrumentation().waitForIdleSync();
+
+
+		// Validate that ReceiverActivity is started
+		TouchUtils.clickView(this, submitButton);
+		Logado logadoActivity = (Logado)
+		        logadoMonitor.waitForActivityWithTimeout(1000);
+		assertNotNull("logadoActivity is null", logadoActivity);
+		assertEquals("Monitor for logadoActivity has not been called",1, logadoMonitor.getHits());
+		assertEquals("Activity is of wrong type", Logado.class, logadoActivity.getClass());
+
+		// Remove the ActivityMonitor
+		getInstrumentation().removeMonitor(logadoMonitor);
 	}
 }
