@@ -19,6 +19,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 public class JSONparser {
@@ -107,4 +108,6 @@ public class JSONparser {
 		return jObj;
 
 	}
+	
+	
 }

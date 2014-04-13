@@ -1,10 +1,20 @@
 package usp.ime.movel.ouvidoria;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,9 +25,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -32,23 +44,29 @@ public class Registrar extends Activity implements OnClickListener {
 	private String username;
 	private Button mPicture;
 	private Button mGPS;
-	private EditText locationt;
+	private Button mEnviar;
 	private EditText description;
+	private EditText localization;
+	private float latitude = 0;
+	private float longitude = 0;
+	private String file64;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.registrar);
 		intent = getIntent();
-		username = intent.getStringExtra("username");
+		username = intent.getStringExtra("uspid");
 		TextView user = (TextView)findViewById(R.id.textView1);
 		user.setText("UsuÃ¡rio: " + username);
 		description = (EditText) findViewById(R.id.description);
-		locationt = (EditText) findViewById(R.id.location);
+		localization = (EditText) findViewById(R.id.location);
 		mPicture = (Button) findViewById(R.id.picture);
 		mPicture.setOnClickListener(this);
-		mPicture = (Button) findViewById(R.id.gps);
-		mPicture.setOnClickListener(this);
+		mGPS = (Button) findViewById(R.id.gps);
+		mGPS.setOnClickListener(this);
+		mEnviar = (Button) findViewById(R.id.enviar);
+		mEnviar.setOnClickListener(this);
 	}
 
 	public void getLocation(){
@@ -57,6 +75,8 @@ public class Registrar extends Activity implements OnClickListener {
     	    public void onLocationChanged(Location location) {
     	    	Double latPoint = location.getLatitude();
     	    	Double longiPoint = location.getLongitude();
+    	    	latitude = latPoint.floatValue();
+    	    	longitude = longiPoint.floatValue();
     			TextView lat = (TextView)findViewById(R.id.lat);
     			lat.setText("Latitude: " + latPoint.toString());
     			TextView longi = (TextView)findViewById(R.id.longi);
@@ -86,13 +106,42 @@ public class Registrar extends Activity implements OnClickListener {
 			break;
 			
 		case R.id.gps:
-			Toast.makeText(Registrar.this, "Obtendo localizaÃ§Ã£o", Toast.LENGTH_LONG).show();
-				getLocation();
+			Toast.makeText(Registrar.this, "Obtendo localização", Toast.LENGTH_LONG).show();
+			getLocation();
+			break;
+			
+		case R.id.enviar:
+			Toast.makeText(Registrar.this, "Enviando", Toast.LENGTH_LONG).show();
+			new AttemptSend().execute();
 			break;
 
 		default:
 			break;
 		}
+	}
+	
+
+	private String convertTo64(File f) throws IOException{
+		InputStream is = new FileInputStream(f);
+		 
+	    long length = f.length();
+	    if (length > Integer.MAX_VALUE) {
+	        // File is too large
+	    }
+	    byte[] bytes = new byte[(int)length];
+	    
+	    int offset = 0;
+	    int numRead = 0;
+	    while (offset < bytes.length
+	           && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+	        offset += numRead;
+	    }
+ 
+	    is.close();
+		byte[] encoded = Base64.encode(bytes, 0);
+		String encodedString = new String(encoded);
+ 
+		return encodedString;
 	}
 	
 	@Override
@@ -101,6 +150,11 @@ public class Registrar extends Activity implements OnClickListener {
         if (resultCode == RESULT_OK) {
                 File f = new File(Environment.getExternalStorageDirectory()
                         .toString() + "/ouvidoria.jpg");
+                try {
+					file64 = convertTo64(f);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
                 System.out.println("Segundo " + Uri.fromFile(f));
                 try {
                     Bitmap bm;
@@ -111,26 +165,8 @@ public class Registrar extends Activity implements OnClickListener {
                     ImageView image = (ImageView) findViewById(R.id.ivImage);
                     image.setImageBitmap(bm);
  
-                    String path = android.os.Environment
-                            .getExternalStorageDirectory()
-                            + File.separator
-                            + "Phoenix" + File.separator + "default";
                     f.delete();
-                    OutputStream fOut = null;
-                    File file = new File(path, String.valueOf(System
-                            .currentTimeMillis()) + ".jpg");
-                    try {
-                        fOut = new FileOutputStream(file);
-                        bm.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
-                        fOut.flush();
-                        fOut.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -138,4 +174,94 @@ public class Registrar extends Activity implements OnClickListener {
         }
     }
 
+	class AttemptSend extends AsyncTask<String, String, HttpResponse> {
+
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Override
+		protected HttpResponse doInBackground(String... args) {
+			JSONObject obj = new JSONObject();
+			try {
+				obj.put("user", username);
+			} catch (JSONException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			try {
+				obj.put("description", description.getText().toString());
+			} catch (JSONException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			try {
+				obj.put("localization", localization.getText().toString());
+			} catch (JSONException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			try {
+				obj.put("latitude", latitude);
+			} catch (JSONException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			try {
+				obj.put("longitude", longitude);
+			} catch (JSONException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			//obj.put("photo", file64);
+			try {
+				obj.put("photo", file64);
+			} catch (JSONException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			JSONObject obj2 = new JSONObject();
+			try {
+				obj2.put("incidentrecord", obj);
+			} catch (JSONException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			System.out.println(obj2.toString());
+			
+			DefaultHttpClient httpclient = new DefaultHttpClient();
+
+		    //url with the post data
+		    HttpPost httpost = new HttpPost("http://uspservices.deusanyjunior.dj/incidente");
+
+		    //passes the results to a string builder/entity
+		    StringEntity se = null;
+			try {
+				se = new StringEntity(obj2.toString());
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		    //sets the post request as the resulting string
+		    httpost.setEntity(se);
+		    //sets a request header so the page receving the request
+		    //will know what to do with it
+		    httpost.setHeader("Accept", "application/json");
+		    httpost.setHeader("Content-type", "application/json");
+
+		    //Handles what is returned from the page 
+		    ResponseHandler responseHandler = new BasicResponseHandler();
+		    try {
+				httpclient.execute(httpost, responseHandler);
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+		protected void onPostExecute(HttpResponse resultMessage) {
+			Toast.makeText(Registrar.this, "Enviado", Toast.LENGTH_LONG).show();
+		}
+	}
 }
