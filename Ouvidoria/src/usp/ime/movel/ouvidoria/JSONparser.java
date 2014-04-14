@@ -29,6 +29,9 @@ public class JSONparser {
 
 	// constructor
 	public JSONparser() {}
+	public JSONparser(InputStream is) {
+		this.is = is;
+	}
 
 	// function get json from url
 	// by making HTTP POST or GET mehtod
@@ -80,6 +83,11 @@ public class JSONparser {
 			e.printStackTrace();
 		}
 
+		return parse();
+	}
+	
+	public JSONObject parse () {
+
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					is, "iso-8859-1"), 8);
@@ -105,7 +113,6 @@ public class JSONparser {
 
 		// return JSON String
 		return jObj;
-
 	}
 	
 	
