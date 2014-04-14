@@ -59,7 +59,8 @@ public class LogadoTest extends ActivityInstrumentationTestCase2<Logado>{
 		assertEquals("Monitor for logadoActivity has not been called",1, registrarMonitor.getHits());
 		assertEquals("Activity is of wrong type", Registrar.class, registrarActivity.getClass());
 
-		// Remove the ActivityMonitor
+		// Finish the Registrar activity and remove the ActivityMonitor
+		registrarActivity.finish();
 		getInstrumentation().removeMonitor(registrarMonitor);
 	}
 }
