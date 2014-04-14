@@ -44,9 +44,9 @@ public class Login extends Activity implements OnClickListener {
 
 	// JSON element ids from repsonse of php script:
 	private static final String TAG_SUCCESS = "ok";
-	private static final String TAG_NUSP = "nusp";
+	//private static final String TAG_NUSP = "nusp";
 	private static final String TAG_USERNAME = "username";
-	private static final String TAG_EMAIL = "email";
+	//private static final String TAG_EMAIL = "email";
 	private static final String TAG_ERROR = "error";
 	private String name_user;
 	private String uspid;
@@ -133,7 +133,7 @@ public class Login extends Activity implements OnClickListener {
 				Intent i = new Intent(Login.this, Logado.class);
 				i.putExtra("username", name_user);
 				i.putExtra("uspid", uspid);
-				finish();
+				//finish();
 				startActivity(i);
 			}
 		}

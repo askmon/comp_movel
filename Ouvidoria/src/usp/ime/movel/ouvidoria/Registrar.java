@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -106,7 +107,7 @@ public class Registrar extends Activity implements OnClickListener {
 			break;
 			
 		case R.id.gps:
-			Toast.makeText(Registrar.this, "Obtendo localização", Toast.LENGTH_LONG).show();
+			Toast.makeText(Registrar.this, "Obtendo localizaÃ§Ã£o", Toast.LENGTH_LONG).show();
 			getLocation();
 			break;
 			
@@ -182,49 +183,19 @@ public class Registrar extends Activity implements OnClickListener {
 			JSONObject obj = new JSONObject();
 			try {
 				obj.put("user", username);
-			} catch (JSONException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
-			try {
 				obj.put("description", description.getText().toString());
-			} catch (JSONException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
-			try {
 				obj.put("localization", localization.getText().toString());
-			} catch (JSONException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
-			try {
-				obj.put("latitude", latitude);
-			} catch (JSONException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
-			try {
-				obj.put("longitude", longitude);
-			} catch (JSONException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
-			//obj.put("photo", file64);
-			try {
 				obj.put("photo", file64);
 			} catch (JSONException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
 			JSONObject obj2 = new JSONObject();
 			try {
 				obj2.put("incidentrecord", obj);
 			} catch (JSONException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
-			System.out.println(obj2.toString());
+			Log.d("Sending to server", obj2.toString());
 			
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 
