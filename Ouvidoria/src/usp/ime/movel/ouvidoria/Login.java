@@ -84,27 +84,28 @@ public class Login extends Activity implements OnClickListener,
 
 	@Override
 	public void onHttpResponse(JSONObject response) {
-		if (response == null) {
-			return;
-		}
 		boolean success;
 		String message;
-		try {
-			Log.d("Login attempt", response.toString());
-			// json success tag
-			success = response.getBoolean(TAG_SUCCESS);
-			if (success) {
-				Log.d("Login Successful!", response.toString());
-				message = "Entrou como " + response.getString(TAG_USERNAME);
-				name_user = response.getString(TAG_USERNAME);
-			} else {
-				Log.d("Login Failure!", response.getString(TAG_ERROR));
-				message = response.getString(TAG_ERROR);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
+		if (response == null) {
+			message = "Sem resposta do servidor";
 			return;
-		}
+		} else
+			try {
+				Log.d("Login attempt", response.toString());
+				// json success tag
+				success = response.getBoolean(TAG_SUCCESS);
+				if (success) {
+					Log.d("Login Successful!", response.toString());
+					message = "Entrou como " + response.getString(TAG_USERNAME);
+					name_user = response.getString(TAG_USERNAME);
+				} else {
+					Log.d("Login Failure!", response.getString(TAG_ERROR));
+					message = response.getString(TAG_ERROR);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return;
+			}
 		Toast.makeText(Login.this, message, Toast.LENGTH_LONG).show();
 		if (success) {
 			Intent i = new Intent(Login.this, Logado.class);
