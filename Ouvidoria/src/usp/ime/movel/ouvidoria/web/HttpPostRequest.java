@@ -2,6 +2,7 @@ package usp.ime.movel.ouvidoria.web;
 
 import java.io.IOException;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
@@ -10,13 +11,13 @@ import org.json.JSONObject;
 
 import android.os.AsyncTask;
 
-public class HttpRequest extends AsyncTask<String, String, HttpResponse> {
+public class HttpPostRequest extends AsyncTask<String, String, JSONObject> {
 
 	private HttpEntityProvider entityProvider;
 	private HttpClientFactory clientFactory;
 	private OnHttpResponseListener responseListener;
 
-	public HttpRequest(HttpEntityProvider entityProvider,
+	public HttpPostRequest(HttpEntityProvider entityProvider,
 			HttpClientFactory clientFactory,
 			OnHttpResponseListener responseListener) {
 		this.entityProvider = entityProvider;
@@ -24,13 +25,13 @@ public class HttpRequest extends AsyncTask<String, String, HttpResponse> {
 		this.responseListener = responseListener;
 	}
 
-	public HttpRequest(HttpEntityProvider entityProvider,
+	public HttpPostRequest(HttpEntityProvider entityProvider,
 			OnHttpResponseListener responseListener) {
 		this(entityProvider, new DefaultHttpClientFactory(), responseListener);
 	}
 
 	@Override
-	protected HttpResponse doInBackground(String... params) {
+	protected JSONObject doInBackground(String... params) {
 		String url = params[0];
 		DefaultHttpClient httpClient = clientFactory.makeHttpClient();
 		HttpPost post = new HttpPost(url);
@@ -41,7 +42,10 @@ public class HttpRequest extends AsyncTask<String, String, HttpResponse> {
 			post.setHeader("Content-type", contentType);
 		}
 		try {
-			return httpClient.execute(post);
+			HttpResponse response = httpClient.execute(post);
+			HttpEntity entity = response.getEntity();
+			if (entity != null)
+				return new JSONparser(entity.getContent()).parse();
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -50,15 +54,7 @@ public class HttpRequest extends AsyncTask<String, String, HttpResponse> {
 		return null;
 	}
 
-	protected void onPostExecute(HttpResponse resultMessage) {
-		JSONObject json = null;
-		try {
-			json = new JSONparser(resultMessage.getEntity().getContent()).parse();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		responseListener.onHttpResponse(json);
+	protected void onPostExecute(JSONObject result) {
+		responseListener.onHttpResponse(result);
 	}
 }

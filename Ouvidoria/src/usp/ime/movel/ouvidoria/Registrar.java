@@ -12,7 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import usp.ime.movel.ouvidoria.web.HttpEntityProvider;
-import usp.ime.movel.ouvidoria.web.HttpRequest;
+import usp.ime.movel.ouvidoria.web.HttpPostRequest;
 import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
 
 import android.app.Activity;
@@ -141,7 +141,7 @@ public class Registrar extends Activity implements OnClickListener,
 					return "application/json";
 				}
 			};
-			new HttpRequest(provider, this)
+			new HttpPostRequest(provider, this)
 					.execute("http://uspservices.deusanyjunior.dj/incidente");
 			break;
 

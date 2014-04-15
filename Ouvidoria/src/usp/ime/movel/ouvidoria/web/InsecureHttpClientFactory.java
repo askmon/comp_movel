@@ -16,10 +16,11 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
 
-// Código disponível em http://madurangasblogs.blogspot.com.br/2013/08/avoiding-javaxnetsslsslpeerunverifiedex.html
-public class InsecureHttpClientFactory {
+public class InsecureHttpClientFactory implements HttpClientFactory {
 
-	public static DefaultHttpClient makeHttpClientFactory() {
+	// Código disponível em http://madurangasblogs.blogspot.com.br/2013/08/avoiding-javaxnetsslsslpeerunverifiedex.html	
+	public DefaultHttpClient makeHttpClient() {
+
 		try {
 			KeyStore trustStore = KeyStore.getInstance(KeyStore
 					.getDefaultType());
@@ -42,6 +43,7 @@ public class InsecureHttpClientFactory {
 
 			return new DefaultHttpClient(ccm, params);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new DefaultHttpClient();
 		}
 	}
