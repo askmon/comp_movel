@@ -7,6 +7,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import usp.ime.movel.ouvidoria.web.JSONparser;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -44,13 +46,13 @@ public class Login extends Activity implements OnClickListener {
 
 	// JSON element ids from repsonse of php script:
 	private static final String TAG_SUCCESS = "ok";
-	//private static final String TAG_NUSP = "nusp";
+	// private static final String TAG_NUSP = "nusp";
 	private static final String TAG_USERNAME = "username";
-	//private static final String TAG_EMAIL = "email";
+	// private static final String TAG_EMAIL = "email";
 	private static final String TAG_ERROR = "error";
 	private String name_user;
 	private String uspid;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

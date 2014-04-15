@@ -1,4 +1,4 @@
-package usp.ime.movel.ouvidoria;
+package usp.ime.movel.ouvidoria.web;
 
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import java.io.IOException;

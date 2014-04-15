@@ -1,4 +1,4 @@
-package usp.ime.movel.ouvidoria;
+package usp.ime.movel.ouvidoria.web;
 
 import java.security.KeyStore;
 
@@ -14,6 +14,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
+
 
 // Código disponível em http://madurangasblogs.blogspot.com.br/2013/08/avoiding-javaxnetsslsslpeerunverifiedex.html
 public class InsecureHttpClientFactory {

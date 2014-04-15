@@ -14,6 +14,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import usp.ime.movel.ouvidoria.web.JSONparser;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;

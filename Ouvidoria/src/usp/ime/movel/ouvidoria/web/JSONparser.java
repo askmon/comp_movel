@@ -1,4 +1,4 @@
-package usp.ime.movel.ouvidoria;
+package usp.ime.movel.ouvidoria.web;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,6 +18,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 import android.util.Log;
 
