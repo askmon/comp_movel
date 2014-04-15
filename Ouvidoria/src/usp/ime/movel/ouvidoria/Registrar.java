@@ -6,15 +6,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import usp.ime.movel.ouvidoria.web.JSONparser;
+import usp.ime.movel.ouvidoria.web.HttpEntityProvider;
+import usp.ime.movel.ouvidoria.web.HttpRequest;
+import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,7 +24,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -39,7 +37,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Registrar extends Activity implements OnClickListener {
+public class Registrar extends Activity implements OnClickListener,
+		OnHttpResponseListener {
 
 	private Intent intent;
 	private String username;
@@ -102,7 +101,6 @@ public class Registrar extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.picture:
 			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -123,8 +121,28 @@ public class Registrar extends Activity implements OnClickListener {
 		case R.id.enviar:
 			// TODO validar campos
 			Toast.makeText(Registrar.this, "Enviando", Toast.LENGTH_LONG)
-					.show();
-			new AttemptSend().execute();
+				.show();
+			HttpEntityProvider provider = new HttpEntityProvider() {
+
+				public AbstractHttpEntity provideEntity() {
+					try {
+						return new StringEntity(makeJSONRequest().toString());
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+					return null;
+				}
+
+				public boolean hasContentType() {
+					return true;
+				}
+
+				public String getContentType() {
+					return "application/json";
+				}
+			};
+			new HttpRequest(provider, this)
+					.execute("http://uspservices.deusanyjunior.dj/incidente");
 			break;
 
 		default:
@@ -153,6 +171,42 @@ public class Registrar extends Activity implements OnClickListener {
 		String encodedString = new String(encoded);
 
 		return encodedString;
+	}
+
+	@Override
+	public void onHttpResponse(JSONObject response) {
+		if (response == null) {
+			Toast.makeText(Registrar.this, "Falha", Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
+		Toast.makeText(Registrar.this, "Enviado", Toast.LENGTH_LONG).show();
+		Log.d("Resposta do Incidente", response.toString());
+	}
+
+	private JSONObject makeJSONRequest() {
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("user", username);
+			// obj.put("login", login); // TODO
+			obj.put("description", description.getText().toString());
+			obj.put("localization", localization.getText().toString());
+			if (file64 != null)
+				obj.put("photo", file64);
+			if (latitude != null && longitude != null) {
+				obj.put("latitude", latitude.doubleValue());
+				obj.put("longitude", longitude.doubleValue());
+			}
+		} catch (JSONException e2) {
+			e2.printStackTrace();
+		}
+		JSONObject obj2 = new JSONObject();
+		try {
+			obj2.put("incidentrecord", obj);
+		} catch (JSONException e2) {
+			e2.printStackTrace();
+		}
+		return obj2;
 	}
 
 	@Override
@@ -186,86 +240,4 @@ public class Registrar extends Activity implements OnClickListener {
 		}
 	}
 
-	class AttemptSend extends AsyncTask<String, String, HttpResponse> {
-
-		// @SuppressWarnings({ "unchecked", "rawtypes" })
-		@Override
-		protected HttpResponse doInBackground(String... args) {
-			JSONObject obj = new JSONObject();
-			try {
-				obj.put("user", username);
-				// obj.put("login", login); // TODO
-				obj.put("description", description.getText().toString());
-				obj.put("localization", localization.getText().toString());
-				if (file64 != null)
-					obj.put("photo", file64);
-				if (latitude != null && longitude != null) {
-					obj.put("latitude", latitude.doubleValue());
-					obj.put("longitude", longitude.doubleValue());
-				}
-			} catch (JSONException e2) {
-				e2.printStackTrace();
-			}
-			JSONObject obj2 = new JSONObject();
-			try {
-				obj2.put("incidentrecord", obj);
-			} catch (JSONException e2) {
-				e2.printStackTrace();
-			}
-			Log.d("Sending to server", obj2.toString());
-
-			DefaultHttpClient httpclient = new DefaultHttpClient();
-
-			// url with the post data
-			HttpPost httpost = new HttpPost(
-					"http://uspservices.deusanyjunior.dj/incidente");
-
-			// passes the results to a string builder/entity
-			StringEntity se = null;
-			try {
-				se = new StringEntity(obj2.toString());
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			// sets the post request as the resulting string
-			httpost.setEntity(se);
-			// sets a request header so the page receving the request
-			// will know what to do with it
-			httpost.setHeader("Accept", "application/json");
-			httpost.setHeader("Content-type", "application/json");
-			try {
-				return httpclient.execute(httpost);
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		protected void onPostExecute(HttpResponse resultMessage) {
-			JSONparser parser;
-			try {
-				parser = new JSONparser(resultMessage.getEntity().getContent());
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				Toast.makeText(Registrar.this, "Falha", Toast.LENGTH_LONG)
-						.show();
-				return;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				Toast.makeText(Registrar.this, "Falha", Toast.LENGTH_LONG)
-						.show();
-				return;
-			}
-			Toast.makeText(Registrar.this, "Enviado", Toast.LENGTH_LONG).show();
-			Log.d("Resposta do Incidente", parser.parse().toString());
-		}
-	}
 }

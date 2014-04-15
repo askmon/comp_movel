@@ -2,7 +2,7 @@ package usp.ime.movel.ouvidoria.web;
 
 import org.apache.http.entity.AbstractHttpEntity;
 
-public interface IHttpEntityProvider {
+public interface HttpEntityProvider {
 
 	public AbstractHttpEntity provideEntity();
 

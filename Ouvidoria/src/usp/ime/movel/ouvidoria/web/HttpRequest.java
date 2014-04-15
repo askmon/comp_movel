@@ -6,19 +6,27 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-public class HTTPRequest extends AsyncTask<String, String, HttpResponse> {
+public class HttpRequest extends AsyncTask<String, String, HttpResponse> {
 
-	private IHttpEntityProvider entityProvider;
-	private IHTTPClientFactory clientFactory;
+	private HttpEntityProvider entityProvider;
+	private HttpClientFactory clientFactory;
+	private OnHttpResponseListener responseListener;
 
-	public HTTPRequest(IHttpEntityProvider entityProvider,
-			IHTTPClientFactory clientFactory) {
+	public HttpRequest(HttpEntityProvider entityProvider,
+			HttpClientFactory clientFactory,
+			OnHttpResponseListener responseListener) {
 		this.entityProvider = entityProvider;
 		this.clientFactory = clientFactory;
+		this.responseListener = responseListener;
+	}
+
+	public HttpRequest(HttpEntityProvider entityProvider,
+			OnHttpResponseListener responseListener) {
+		this(entityProvider, new DefaultHttpClientFactory(), responseListener);
 	}
 
 	@Override
@@ -43,18 +51,14 @@ public class HTTPRequest extends AsyncTask<String, String, HttpResponse> {
 	}
 
 	protected void onPostExecute(HttpResponse resultMessage) {
-		JSONparser parser;
+		JSONObject json = null;
 		try {
-			parser = new JSONparser(resultMessage.getEntity().getContent());
+			json = new JSONparser(resultMessage.getEntity().getContent()).parse();
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
-			return;
 		} catch (IOException e) {
 			e.printStackTrace();
-			// .show();
-			return;
 		}
-		// Toast.makeText(Registrar.this, "Enviado", Toast.LENGTH_LONG).show();
-		Log.d("Resutado", parser.parse().toString());
+		responseListener.onHttpResponse(json);
 	}
 }
