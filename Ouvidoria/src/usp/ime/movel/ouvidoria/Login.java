@@ -60,7 +60,6 @@ public class Login extends Activity implements OnClickListener,
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.login:
 			HttpEntityProvider provider = new HttpEntityProvider() {
