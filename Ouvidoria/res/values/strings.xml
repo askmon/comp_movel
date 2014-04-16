@@ -6,7 +6,8 @@
     <string name="title_welcome">Bem-vindo à Ouvidoria USP!</string>
     <string name="input_user">Usuário/NUSP</string>
     <string name="input_pass">Senha</string>
-    <string name="action_login">Entrar</string>
+    <string name="action_login">Entrar como usuário</string>
+    <string name="action_login_ouvidor">Entrar como ouvidor</string>
     <string name="action_exit">Sair</string>
     <string name="title_logado">Logado</string>
     <string name="text_success">SUCESSO!!</string>
@@ -17,5 +18,6 @@
     <string name="location_string">Local</string>
     <string name="enviar">Enviar</string>
     <string name="gps">Adicionar local via GPS</string>
+    <string name="list_new">Listar novos incidentes</string>
 
 </resources>
