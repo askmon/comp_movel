@@ -6,7 +6,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
@@ -14,7 +13,6 @@ import android.os.AsyncTask;
 
 public class HttpGetRequest extends AsyncTask<String, String, JSONObject> {
 
-	private HttpEntityProvider entityProvider;
 	private HttpClientFactory clientFactory;
 	private OnHttpResponseListener responseListener;
 
@@ -25,8 +23,8 @@ public class HttpGetRequest extends AsyncTask<String, String, JSONObject> {
 		this.responseListener = responseListener;
 	}
 
-	public HttpGetRequest(HttpEntityProvider entityProvider,
-			OnHttpResponseListener responseListener) {
+	public HttpGetRequest(OnHttpResponseListener responseListener) {
+		this(new DefaultHttpClientFactory(), responseListener);
 	}
 
 	@Override
