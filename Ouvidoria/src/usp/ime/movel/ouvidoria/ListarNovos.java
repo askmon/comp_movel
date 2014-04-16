@@ -35,9 +35,8 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		TextView stats = (TextView) findViewById(R.id.textView1);
 		stats.setText(status);
 		new HttpGetRequest(new InsecureHttpClientFactory(), this)
-		.execute("http://uspservices.deusanyjunior.dj/incidente/1.json");
+				.execute("http://uspservices.deusanyjunior.dj/incidente/1.json");
 	}
-
 
 	@Override
 	public void onHttpResponse(JSONObject response) {
@@ -56,11 +55,11 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		TextView oc3 = (TextView) findViewById(R.id.ocorrencia3);
 		TextView oc4 = (TextView) findViewById(R.id.ocorrencia4);
 		TextView oc5 = (TextView) findViewById(R.id.ocorrencia5);
-		ImageView im1 = (ImageView)findViewById(R.id.ivImage1);
-		ImageView im2 = (ImageView)findViewById(R.id.ivImage2);
-		ImageView im3 = (ImageView)findViewById(R.id.ivImage3);
-		ImageView im4 = (ImageView)findViewById(R.id.ivImage4);
-		ImageView im5 = (ImageView)findViewById(R.id.ivImage5);
+		ImageView im1 = (ImageView) findViewById(R.id.ivImage1);
+		ImageView im2 = (ImageView) findViewById(R.id.ivImage2);
+		ImageView im3 = (ImageView) findViewById(R.id.ivImage3);
+		ImageView im4 = (ImageView) findViewById(R.id.ivImage4);
+		ImageView im5 = (ImageView) findViewById(R.id.ivImage5);
 		oc1.setText(parseJSON(jsons, 0));
 		oc2.setText(parseJSON(jsons, 1));
 		oc3.setText(parseJSON(jsons, 2));
@@ -68,17 +67,25 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		oc5.setText(parseJSON(jsons, 4));
 	}
 
-	private String parseJSON(JSONArray array, int index){
+	private String parseJSON(JSONArray array, int index) {
 		try {
-			return "Descrição: " + array.getJSONObject(index).getJSONObject("incidentrecord").getString("description") + "\n" + "Local: " + array.getJSONObject(index).getJSONObject("incidentrecord").getString("localization") + "\n";
+			return "Descrição: "
+					+ array.getJSONObject(index)
+							.getJSONObject("incidentrecord")
+							.getString("description")
+					+ "\n"
+					+ "Local: "
+					+ array.getJSONObject(index)
+							.getJSONObject("incidentrecord")
+							.getString("localization") + "\n";
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
-	private File FileFrom64(String file64, String filename){
+
+	private File FileFrom64(String file64, String filename) {
 		byte[] btDataFile = Base64.decode(file64, 0);
 		File f = new File(filename);
 		FileOutputStream osf = null;
@@ -102,12 +109,11 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		}
 		return f;
 	}
-	
+
 	@Override
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
 
 }
