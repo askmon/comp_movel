@@ -5,10 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.http.impl.conn.DefaultClientConnection;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import usp.ime.movel.ouvidoria.web.DefaultHttpClientFactory;
 import usp.ime.movel.ouvidoria.web.HttpGetRequest;
 import usp.ime.movel.ouvidoria.web.InsecureHttpClientFactory;
 import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
@@ -34,7 +36,7 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		status = "Carregando";
 		TextView stats = (TextView) findViewById(R.id.textView1);
 		stats.setText(status);
-		new HttpGetRequest(new InsecureHttpClientFactory(), this)
+		new HttpGetRequest(this)
 				.execute("http://uspservices.deusanyjunior.dj/incidente/1.json");
 	}
 

@@ -18,26 +18,36 @@ public class OuvidoriaActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		batteryState = new BatteryState();
 		connectionState = new ConnectionState(this);
+		registerReceivers();
+	}
+
+	protected BatteryState getBatteryState() {
+		return batteryState;
+	}
+
+	protected ConnectionState getConnectionState() {
+		return connectionState;
+	}
+
+	private void registerReceivers () {
 		registerReceiver(batteryState, new IntentFilter(
 				Intent.ACTION_BATTERY_CHANGED));
 		registerReceiver(connectionState, new IntentFilter(
 				ConnectivityManager.CONNECTIVITY_ACTION));
 	}
 
-	BatteryState getBatteryState() {
-		return batteryState;
-	}
-
-	ConnectionState getConnectionState() {
-		return connectionState;
+	@Override
+	public void onRestart() {
+		super.onRestart();
+		registerReceivers();
 	}
 
 	@Override
 	public void onStop() {
 		// Hammer time.
+		super.onStop();
 		unregisterReceiver(batteryState);
 		unregisterReceiver(connectionState);
-		super.onStop();
 	}
 
 }
