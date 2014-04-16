@@ -125,9 +125,14 @@ public class Registrar extends Activity implements OnClickListener,
 			break;
 
 		case R.id.gps:
-			Toast.makeText(Registrar.this, "Obtendo localização",
-					Toast.LENGTH_LONG).show();
-			getLocation();
+			if (batteryState.getLevel() > 15) {
+				Toast.makeText(Registrar.this, "Obtendo localização",
+						Toast.LENGTH_LONG).show();
+				getLocation();
+			} else {
+				Toast.makeText(Registrar.this, "Pouca bateria",
+						Toast.LENGTH_LONG).show();
+			}
 			break;
 
 		case R.id.enviar:
@@ -249,6 +254,13 @@ public class Registrar extends Activity implements OnClickListener,
 			}
 
 		}
+	}
+
+	@Override
+	public void onStop() {
+		// Hammer time.
+		unregisterReceiver(batteryState);
+		super.onStop();
 	}
 
 }
