@@ -1,15 +1,5 @@
 package usp.ime.movel.ouvidoria;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.json.JSONArray;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -17,7 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class LogadoOuvidor extends Activity implements OnClickListener {
+public class LogadoOuvidor extends OuvidoriaActivity implements OnClickListener {
 
 	private Intent intent;
 	private String username;

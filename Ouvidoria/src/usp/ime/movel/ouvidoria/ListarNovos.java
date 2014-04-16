@@ -1,25 +1,17 @@
 package usp.ime.movel.ouvidoria;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 import usp.ime.movel.ouvidoria.web.HttpGetRequest;
-import usp.ime.movel.ouvidoria.web.HttpPostRequest;
 import usp.ime.movel.ouvidoria.web.InsecureHttpClientFactory;
 import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
@@ -28,12 +20,11 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ListarNovos extends Activity implements OnClickListener,
+public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		OnHttpResponseListener {
 
 	private Intent intent;
 	private String status;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
