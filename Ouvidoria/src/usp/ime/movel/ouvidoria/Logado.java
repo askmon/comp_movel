@@ -8,7 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class Logado extends Activity implements OnClickListener {
+public class Logado extends OuvidoriaActivity implements OnClickListener {
 
 	private Intent intent;
 	private String username;

@@ -25,7 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class Login extends Activity implements OnClickListener,
+public class Login extends OuvidoriaActivity implements OnClickListener,
 		OnHttpResponseListener {
 
 	private EditText user, pass;
@@ -62,18 +62,27 @@ public class Login extends Activity implements OnClickListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.login:
-			HttpEntityProvider provider = new HttpEntityProvider() {
-				public AbstractHttpEntity provideEntity() {
-					try {
-						return new UrlEncodedFormEntity(makePostParams());
-					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
+			if (!getConnectionState().isConnected())
+				Toast.makeText(Login.this, "Sem conexão", Toast.LENGTH_LONG)
+						.show();
+			else if (getBatteryState().getLevel() <= 15
+					&& getConnectionState().getType() != "WIFI") {
+				Toast.makeText(Login.this, "Pouca bateria e sem WIFI",
+						Toast.LENGTH_LONG).show();
+			} else {
+				HttpEntityProvider provider = new HttpEntityProvider() {
+					public AbstractHttpEntity provideEntity() {
+						try {
+							return new UrlEncodedFormEntity(makePostParams());
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
+						return null;
 					}
-					return null;
-				}
-			};
-			new HttpPostRequest(provider, new InsecureHttpClientFactory(), this)
-					.execute(LOGIN_URL);
+				};
+				new HttpPostRequest(provider, new InsecureHttpClientFactory(),
+						this).execute(LOGIN_URL);
+			}
 			break;
 
 		default:

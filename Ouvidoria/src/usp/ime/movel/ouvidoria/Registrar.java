@@ -11,15 +11,12 @@ import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import usp.ime.movel.ouvidoria.device.BatteryState;
 import usp.ime.movel.ouvidoria.web.HttpEntityProvider;
 import usp.ime.movel.ouvidoria.web.HttpPostRequest;
 import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -39,7 +36,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Registrar extends Activity implements OnClickListener,
+public class Registrar extends OuvidoriaActivity implements OnClickListener,
 		OnHttpResponseListener {
 
 	private Intent intent;
@@ -52,8 +49,6 @@ public class Registrar extends Activity implements OnClickListener,
 	private Double latitude;
 	private Double longitude;
 	private String file64;
-
-	private BatteryState batteryState;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +69,6 @@ public class Registrar extends Activity implements OnClickListener,
 		mGPS.setOnClickListener(this);
 		mEnviar = (Button) findViewById(R.id.enviar);
 		mEnviar.setOnClickListener(this);
-		batteryState = new BatteryState();
-		registerReceiver(batteryState, new IntentFilter(
-				Intent.ACTION_BATTERY_CHANGED));
 	}
 
 	public void getLocation() {
@@ -110,7 +102,7 @@ public class Registrar extends Activity implements OnClickListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.picture:
-			if (batteryState.getLevel() > 15) {
+			if (getBatteryState().getLevel() > 15) {
 				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 				File f = new File(
 						android.os.Environment.getExternalStorageDirectory(),
@@ -125,7 +117,7 @@ public class Registrar extends Activity implements OnClickListener,
 			break;
 
 		case R.id.gps:
-			if (batteryState.getLevel() > 15) {
+			if (getBatteryState().getLevel() > 15) {
 				Toast.makeText(Registrar.this, "Obtendo localização",
 						Toast.LENGTH_LONG).show();
 				getLocation();
@@ -136,30 +128,40 @@ public class Registrar extends Activity implements OnClickListener,
 			break;
 
 		case R.id.enviar:
-			// TODO validar campos
-			Toast.makeText(Registrar.this, "Enviando", Toast.LENGTH_LONG)
-					.show();
-			HttpEntityProvider provider = new HttpEntityProvider() {
+			if (!getConnectionState().isConnected())
+				Toast.makeText(Registrar.this, "Sem conexão", Toast.LENGTH_LONG)
+						.show();
+			else if (getBatteryState().getLevel() <= 15
+					&& getConnectionState().getType() != "WIFI") {
+				Toast.makeText(Registrar.this, "Pouca bateria e sem WIFI",
+						Toast.LENGTH_LONG).show();
+			} else {
+				// TODO validar campos
+				Toast.makeText(Registrar.this, "Enviando", Toast.LENGTH_LONG)
+						.show();
+				HttpEntityProvider provider = new HttpEntityProvider() {
 
-				public AbstractHttpEntity provideEntity() {
-					try {
-						return new StringEntity(makeJSONRequest().toString());
-					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
+					public AbstractHttpEntity provideEntity() {
+						try {
+							return new StringEntity(makeJSONRequest()
+									.toString());
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
+						return null;
 					}
-					return null;
-				}
 
-				public boolean hasContentType() {
-					return true;
-				}
+					public boolean hasContentType() {
+						return true;
+					}
 
-				public String getContentType() {
-					return "application/json";
-				}
-			};
-			new HttpPostRequest(provider, this)
-					.execute("http://uspservices.deusanyjunior.dj/incidente");
+					public String getContentType() {
+						return "application/json";
+					}
+				};
+				new HttpPostRequest(provider, this)
+						.execute("http://uspservices.deusanyjunior.dj/incidente");
+			}
 			break;
 
 		default:
@@ -254,13 +256,6 @@ public class Registrar extends Activity implements OnClickListener,
 			}
 
 		}
-	}
-
-	@Override
-	public void onStop() {
-		// Hammer time.
-		unregisterReceiver(batteryState);
-		super.onStop();
 	}
 
 }
