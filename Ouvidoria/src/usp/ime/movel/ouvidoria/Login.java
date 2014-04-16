@@ -15,7 +15,6 @@ import usp.ime.movel.ouvidoria.web.HttpPostRequest;
 import usp.ime.movel.ouvidoria.web.InsecureHttpClientFactory;
 import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
