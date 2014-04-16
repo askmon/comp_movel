@@ -11,6 +11,7 @@ import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import usp.ime.movel.ouvidoria.device.BatteryState;
 import usp.ime.movel.ouvidoria.web.HttpEntityProvider;
 import usp.ime.movel.ouvidoria.web.HttpPostRequest;
 import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
@@ -18,6 +19,7 @@ import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -51,6 +53,8 @@ public class Registrar extends Activity implements OnClickListener,
 	private Double longitude;
 	private String file64;
 
+	private BatteryState batteryState;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,6 +74,9 @@ public class Registrar extends Activity implements OnClickListener,
 		mGPS.setOnClickListener(this);
 		mEnviar = (Button) findViewById(R.id.enviar);
 		mEnviar.setOnClickListener(this);
+		batteryState = new BatteryState();
+		registerReceiver(batteryState, new IntentFilter(
+				Intent.ACTION_BATTERY_CHANGED));
 	}
 
 	public void getLocation() {
@@ -103,13 +110,18 @@ public class Registrar extends Activity implements OnClickListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.picture:
-			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			File f = new File(
-					android.os.Environment.getExternalStorageDirectory(),
-					"ouvidoria.jpg");
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-			System.out.println("Primeiro " + Uri.fromFile(f));
-			startActivityForResult(intent, 1);
+			if (batteryState.getLevel() > 15) {
+				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				File f = new File(
+						android.os.Environment.getExternalStorageDirectory(),
+						"ouvidoria.jpg");
+				intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+				System.out.println("Primeiro " + Uri.fromFile(f));
+				startActivityForResult(intent, 1);
+			} else {
+				Toast.makeText(Registrar.this, "Pouca bateria",
+						Toast.LENGTH_LONG).show();
+			}
 			break;
 
 		case R.id.gps:
@@ -121,7 +133,7 @@ public class Registrar extends Activity implements OnClickListener,
 		case R.id.enviar:
 			// TODO validar campos
 			Toast.makeText(Registrar.this, "Enviando", Toast.LENGTH_LONG)
-				.show();
+					.show();
 			HttpEntityProvider provider = new HttpEntityProvider() {
 
 				public AbstractHttpEntity provideEntity() {
@@ -176,8 +188,7 @@ public class Registrar extends Activity implements OnClickListener,
 	@Override
 	public void onHttpResponse(JSONObject response) {
 		if (response == null) {
-			Toast.makeText(Registrar.this, "Falha", Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(Registrar.this, "Falha", Toast.LENGTH_LONG).show();
 			return;
 		}
 		Toast.makeText(Registrar.this, "Enviado", Toast.LENGTH_LONG).show();
