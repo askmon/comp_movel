@@ -30,6 +30,7 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 
 	private EditText user, pass;
 	private Button mSubmit;
+	private Button mSubmitOuvidor;
 
 	private static final String LOGIN_URL = "https://social.stoa.usp.br/plugin/stoa/authenticate/";
 
@@ -41,21 +42,24 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 	private static final String TAG_ERROR = "error";
 	private String name_user;
 	private String uspid;
+	private int ouvidor = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
-
+		
 		// setup input fields
 		user = (EditText) findViewById(R.id.username);
 		pass = (EditText) findViewById(R.id.password);
 
 		// setup buttons
 		mSubmit = (Button) findViewById(R.id.login);
+		mSubmitOuvidor = (Button) findViewById(R.id.login_ouvidor);
 
 		// register listeners
 		mSubmit.setOnClickListener(this);
+		mSubmitOuvidor.setOnClickListener(this);
 	}
 
 	@Override
@@ -83,6 +87,22 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 				new HttpPostRequest(provider, new InsecureHttpClientFactory(),
 						this).execute(LOGIN_URL);
 			}
+			break;
+		
+		case R.id.login_ouvidor:
+			ouvidor = 1;
+			HttpEntityProvider provider_ouvidor = new HttpEntityProvider() {
+				public AbstractHttpEntity provideEntity() {
+					try {
+						return new UrlEncodedFormEntity(makePostParams());
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+					return null;
+				}
+			};
+			new HttpPostRequest(provider_ouvidor, new InsecureHttpClientFactory(), this)
+					.execute(LOGIN_URL);
 			break;
 
 		default:
@@ -116,11 +136,20 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 			}
 		Toast.makeText(Login.this, message, Toast.LENGTH_LONG).show();
 		if (success) {
-			Intent i = new Intent(Login.this, Logado.class);
-			i.putExtra("username", name_user);
-			i.putExtra("uspid", uspid);
-			finish();
-			startActivity(i);
+			if(ouvidor == 0){
+				Intent i = new Intent(Login.this, Logado.class);
+				i.putExtra("username", name_user);
+				i.putExtra("uspid", uspid);
+				finish();
+				startActivity(i);
+			}
+			else{
+				Intent i = new Intent(Login.this, LogadoOuvidor.class);
+				i.putExtra("username", name_user);
+				i.putExtra("uspid", uspid);
+				finish();
+				startActivity(i);
+			}
 		}
 	}
 
