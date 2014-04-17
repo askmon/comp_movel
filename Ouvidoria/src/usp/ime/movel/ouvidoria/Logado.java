@@ -1,5 +1,6 @@
 package usp.ime.movel.ouvidoria;
 
+import usp.ime.movel.ouvidoria.device.SQLiteHelper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +14,8 @@ public class Logado extends OuvidoriaActivity implements OnClickListener {
 	private String userName;
 	private String uspID;
 	private Button mRegister;
-	
+	private SQLiteHelper db;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -21,10 +23,22 @@ public class Logado extends OuvidoriaActivity implements OnClickListener {
 		intent = getIntent();
 		userName = intent.getStringExtra("username");
 		uspID = intent.getStringExtra("uspid");
-		TextView user = (TextView)findViewById(R.id.textView1);
+		TextView user = (TextView) findViewById(R.id.textView1);
 		user.setText("Usuário: " + userName);
 		mRegister = (Button) findViewById(R.id.register);
 		mRegister.setOnClickListener(this);
+		db = new SQLiteHelper(this);
+		checkIncidents();
+	}
+
+	private void checkIncidents() {
+		db.getAllIncidents();
+	}
+
+	@Override
+	public void onStart() {
+		super.onRestart();
+		checkIncidents();
 	}
 
 	@Override
@@ -32,7 +46,7 @@ public class Logado extends OuvidoriaActivity implements OnClickListener {
 		Intent i = new Intent(Logado.this, Registrar.class);
 		i.putExtra("username", userName);
 		i.putExtra("uspid", uspID);
-		//finish();
+		// finish();
 		startActivity(i);
 	}
 

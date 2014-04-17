@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import usp.ime.movel.ouvidoria.model.Incidente;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -51,7 +52,15 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	
 	//--------------------------------------------------------------------------
 	
-
+    private static final String KEY_ID = "id";
+    private static final String KEY_USPID = "uspid";
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_LATITUDE = "latitude";
+    private static final String KEY_LONGITUDE = "longitude";
+    private static final String KEY_FILE64 = "file64";
+    private static final String KEY_DESCRIPTION = "description";
+    private static final String KEY_LOCALIZATION = "localization";
+	
 	// Get All Books
     public List<Incidente> getAllIncidents() {
         List<Incidente> incidents = new LinkedList<Incidente>();
@@ -68,11 +77,16 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
             	incident = new Incidente();
-                incident.setId(Integer.parseInt(cursor.getString(0)));
+                incident.setId(Long.parseLong(cursor.getString(0)));
                 incident.setUspId(cursor.getString(1));
                 incident.setUserName(cursor.getString(2));
-                incident.setLatitude(Double.parseDouble(cursor.getString(3)));
-                incident.setLongitude(Double.parseDouble(cursor.getString(4)));
+                String temp;
+                temp = cursor.getString(3);
+                if (temp != null)
+                	incident.setLatitude(Double.parseDouble(temp));
+                temp = cursor.getString(4);
+                if (temp != null)
+                	incident.setLongitude(Double.parseDouble(temp));
                 incident.setFile64(cursor.getString(5));
                 incident.setDescription(cursor.getString(6));
                 incident.setLocalization(cursor.getString(7));
@@ -83,6 +97,43 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		Log.d("getAllIncidents()", incidents.toString());
 
         return incidents;
+    }
+    
+    private ContentValues makeValues(Incidente incident) {
+        ContentValues values = new ContentValues();
+        values.put(KEY_USPID, incident.getUspId());
+        values.put(KEY_USERNAME, incident.getUserName());
+        values.put(KEY_LATITUDE, incident.getLatitude());
+        values.put(KEY_LONGITUDE, incident.getLongitude());
+        values.put(KEY_FILE64, incident.getFile64());
+        values.put(KEY_DESCRIPTION, incident.getDescription());
+        values.put(KEY_LOCALIZATION, incident.getLocalization());
+        return values;
+    }
+    
+    public Long addIncident(Incidente incident) {
+    	long id = -1;
+		// 1. get reference to writable DB
+		SQLiteDatabase db = this.getWritableDatabase();
+        // 2. insert
+        id = db.insert(DATABASE_TABLE, // table
+        		null, //nullColumnHack
+        		makeValues(incident)); // key/value -> keys = column names/ values = column values
+        db.close();
+		Log.d("addIncident()", Long.toString(id));
+    	return Long.valueOf(id);
+    }
+    
+    public void updateIncident(Incidente incident) {
+    	// 1. get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+        // 3. updating row
+        int i = db.update(DATABASE_TABLE, //table
+        		makeValues(incident), // column/value
+        		KEY_ID+" = ?", // selections
+                new String[] { String.valueOf(incident.getId()) }); //selection args
+        db.close();
+		Log.d("updateIncident()", incident.getId().toString());
     }
 	
 }

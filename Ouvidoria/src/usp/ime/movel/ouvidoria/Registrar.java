@@ -67,7 +67,6 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 		mEnviar = (Button) findViewById(R.id.enviar);
 		mEnviar.setOnClickListener(this);
 		db = new SQLiteHelper(this);
-		List<Incidente> incidents = db.getAllIncidents();
 	}
 
 	public void getLocation() {
@@ -128,25 +127,27 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 			break;
 
 		case R.id.enviar:
-			if (!getConnectionState().isConnected())
+			// TODO validar campos
+			incidente.setDescription(description.getText().toString());
+			incidente.setLocalization(localization.getText().toString());
+			boolean ok = true;
+			if (!getConnectionState().isConnected()) {
 				Toast.makeText(Registrar.this, "Sem conexão", Toast.LENGTH_LONG)
 						.show();
-			else if (getBatteryState().getLevel() <= 15
+				ok = false;
+			} else if (getBatteryState().getLevel() <= 15
 					&& getConnectionState().getType() != "WIFI") {
 				Toast.makeText(Registrar.this, "Pouca bateria e sem WIFI",
 						Toast.LENGTH_LONG).show();
-			} else {
-				// TODO validar campos
+				ok = false;
+			}
+			if (ok) {
 				Toast.makeText(Registrar.this, "Enviando", Toast.LENGTH_LONG)
 						.show();
 				HttpEntityProvider provider = new HttpEntityProvider() {
 
 					public AbstractHttpEntity provideEntity() {
 						try {
-							incidente.setDescription(description.getText()
-									.toString());
-							incidente.setLocalization(localization.getText()
-									.toString());
 							return new StringEntity(incidente.toJSONObject()
 									.toString());
 						} catch (UnsupportedEncodingException e) {
@@ -165,7 +166,8 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 				};
 				new HttpPostRequester(this, provider)
 						.post("http://uspservices.deusanyjunior.dj/incidente");
-			}
+			} else
+				incidente.makeCache(db);
 			break;
 
 		default:

@@ -3,8 +3,10 @@ package usp.ime.movel.ouvidoria.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import usp.ime.movel.ouvidoria.device.SQLiteHelper;
+
 public class Incidente {
-	private Integer id = null;
+	private Long id = null;
 	private String uspId = null;
 	private String userName = null;
 	private Double latitude = null;
@@ -40,6 +42,13 @@ public class Incidente {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public void makeCache(SQLiteHelper db) {
+		if (id == null)
+			id = db.addIncident(this);
+		else
+			db.updateIncident(this);
 	}
 
 	public String getUspId() {
@@ -98,11 +107,11 @@ public class Incidente {
 		this.localization = localization;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 }
