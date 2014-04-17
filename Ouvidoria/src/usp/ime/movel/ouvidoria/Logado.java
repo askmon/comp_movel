@@ -1,6 +1,5 @@
 package usp.ime.movel.ouvidoria;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class Logado extends Activity implements OnClickListener {
+public class Logado extends OuvidoriaActivity implements OnClickListener {
 
 	private Intent intent;
 	private String username;
