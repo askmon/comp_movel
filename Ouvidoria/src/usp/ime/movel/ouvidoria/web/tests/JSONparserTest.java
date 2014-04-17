@@ -29,9 +29,10 @@ public class JSONparserTest {
 	
 	@Test
 	public void testParseOfInputStremIntoAnJSONObject () throws UnsupportedEncodingException, Exception {
+		JSONObject obj = new JSONObject(string);
 		JSONparser jsonParser = new JSONparser(new ByteArrayInputStream(string.getBytes()));
 		jsonObject = jsonParser.parse();
-		
 		assertNotNull(jsonObject);
+		assert(obj.equals(jsonObject));
 	}
 }
