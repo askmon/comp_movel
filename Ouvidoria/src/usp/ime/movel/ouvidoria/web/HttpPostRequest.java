@@ -45,7 +45,7 @@ public class HttpPostRequest extends AsyncTask<String, String, JSONObject> {
 			HttpResponse response = httpClient.execute(post);
 			HttpEntity entity = response.getEntity();
 			if (entity != null)
-				return new JSONparser(entity.getContent()).parse();
+				return new JSONParser(entity.getContent()).parse();
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

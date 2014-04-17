@@ -36,7 +36,7 @@ public class HttpGetRequest extends AsyncTask<String, String, JSONObject> {
 			HttpResponse response = httpClient.execute(get);
 			HttpEntity entity = response.getEntity();
 			if (entity != null)
-				return new JSONparser(entity.getContent()).parse();
+				return new JSONParser(entity.getContent()).parse();
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

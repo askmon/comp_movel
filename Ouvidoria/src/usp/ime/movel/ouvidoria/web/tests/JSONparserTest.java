@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import usp.ime.movel.ouvidoria.web.JSONparser;
+import usp.ime.movel.ouvidoria.web.JSONParser;
 
 @RunWith(PowerMockRunner.class)
 public class JSONparserTest {
@@ -23,14 +23,14 @@ public class JSONparserTest {
 	
 	@Test(expected = NullPointerException.class)
 	public void testExceptionWhenInputStreamIsNull () {
-		JSONparser jsonParser = new JSONparser(null);
+		JSONParser jsonParser = new JSONParser(null);
 		jsonParser.parse();
 	}
 	
 	@Test
 	public void testParseOfInputStremIntoAnJSONObject () throws UnsupportedEncodingException, Exception {
 		JSONObject obj = new JSONObject(string);
-		JSONparser jsonParser = new JSONparser(new ByteArrayInputStream(string.getBytes()));
+		JSONParser jsonParser = new JSONParser(new ByteArrayInputStream(string.getBytes()));
 		jsonObject = jsonParser.parse();
 		assertNotNull(jsonObject);
 		assert(obj.equals(jsonObject));

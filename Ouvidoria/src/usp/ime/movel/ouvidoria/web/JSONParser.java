@@ -8,14 +8,14 @@ import java.io.InputStreamReader;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JSONparser {
+public class JSONParser {
 
 	static JSONObject jObj = null;
 	static String json = "";
 
 	InputStream is;
 
-	public JSONparser(InputStream is) {
+	public JSONParser(InputStream is) {
 		this.is = is;
 	}
 
