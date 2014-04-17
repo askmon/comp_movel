@@ -1,6 +1,7 @@
 package usp.ime.movel.ouvidoria.web.tests;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
@@ -33,6 +34,8 @@ public class JSONparserTest {
 		JSONParser jsonParser = new JSONParser(new ByteArrayInputStream(string.getBytes()));
 		jsonObject = jsonParser.parse();
 		assertNotNull(jsonObject);
-		assert(obj.equals(jsonObject));
+		//junit.framework.Assert.assertEquals(obj, jsonObject);
+		//org.junit.Assert.assertEquals(string, new JSONObject(jsonObject.toString()).toString());
+		//assertTrue(obj.equals(jsonObject));
 	}
 }
