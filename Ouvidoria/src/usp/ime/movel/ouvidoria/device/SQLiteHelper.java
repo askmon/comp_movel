@@ -1,6 +1,6 @@
 package usp.ime.movel.ouvidoria.device;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,12 +15,12 @@ import android.util.Log;
 public class SQLiteHelper extends SQLiteOpenHelper {
 
 	// Database Version
-    private static final int DATABASE_VERSION = 3;
-    // Database Name
-    private static final String DATABASE_NAME = "OuvidoriaDB";
-    // Table Name
-    private static final String DATABASE_TABLE = "incidents";
-    
+	private static final int DATABASE_VERSION = 4;
+	// Database Name
+	private static final String DATABASE_NAME = "OuvidoriaDB";
+	// Table Name
+	private static final String DATABASE_TABLE = "incidents";
+
 	public SQLiteHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -28,15 +28,16 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// SQL statement to create book table
-		String queryCode = "CREATE TABLE "+DATABASE_TABLE+" ( "+
-				"id INTEGER PRIMARY KEY AUTOINCREMENT, "+
-				"uspid TEXT, "+
-				"username TEXT, "+
-				"latitude DOUBLE, "+
-				"longitude DOUBLE, "+
-				"file64 TEXT, "+
-				"description TEXT, "+
-				"localization TEXT )";
+		String queryCode = "CREATE TABLE " + DATABASE_TABLE + " ( ";
+
+		IncidentKey[] keys = IncidentKey.values();
+		for (int i = 0; i < keys.length; i++) {
+			queryCode += keys[i].getColumnName() + " " + keys[i].getType();
+			if (i + 1 < keys.length)
+				queryCode += ", ";
+			else
+				queryCode += " )";
+		}
 		Log.d("DB QUERY", queryCode);
 		// create books table
 		db.execSQL(queryCode);
@@ -45,95 +46,142 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// Drop older books table if existed
-        db.execSQL("DROP TABLE IF EXISTS "+DATABASE_TABLE);
-        // create fresh books table
-        this.onCreate(db);
+		db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
+		// create fresh books table
+		this.onCreate(db);
 	}
-	
-	//--------------------------------------------------------------------------
-	
-    private static final String KEY_ID = "id";
-    private static final String KEY_USPID = "uspid";
-    private static final String KEY_USERNAME = "username";
-    private static final String KEY_LATITUDE = "latitude";
-    private static final String KEY_LONGITUDE = "longitude";
-    private static final String KEY_FILE64 = "file64";
-    private static final String KEY_DESCRIPTION = "description";
-    private static final String KEY_LOCALIZATION = "localization";
-	
-	// Get All Books
-    public List<Incidente> getAllIncidents() {
-        List<Incidente> incidents = new LinkedList<Incidente>();
 
-        // 1. build the query
-        String query = "SELECT  * FROM " + DATABASE_TABLE;
- 
-    	// 2. get reference to writable DB
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
- 
-        // 3. go over each row, build book and add it to list
-        Incidente incident = null;
-        if (cursor.moveToFirst()) {
-            do {
-            	incident = new Incidente();
-                incident.setId(Long.parseLong(cursor.getString(0)));
-                incident.setUspId(cursor.getString(1));
-                incident.setUserName(cursor.getString(2));
-                String temp;
-                temp = cursor.getString(3);
-                if (temp != null)
-                	incident.setLatitude(Double.parseDouble(temp));
-                temp = cursor.getString(4);
-                if (temp != null)
-                	incident.setLongitude(Double.parseDouble(temp));
-                incident.setFile64(cursor.getString(5));
-                incident.setDescription(cursor.getString(6));
-                incident.setLocalization(cursor.getString(7));
-                incidents.add(incident);
-            } while (cursor.moveToNext());
-        }
-        
+	// --------------------------------------------------------------------------
+
+	enum IncidentKey {
+		ID("INTEGER PRIMARY KEY AUTOINCREMENT"), USPID("TEXT"), USERNAME("TEXT"), LATITUDE(
+				"DOUBLE"), LONGITUDE("DOUBLE"), FILE64("TEXT"), DESCRIPTION(
+				"TEXT"), LOCALIZATION("TEXT");
+		private String columnName;
+		private String type;
+		private Method getter;
+		private Method setter;
+
+		IncidentKey(String type) {
+			this.columnName = this.name().toLowerCase();
+			this.type = type;
+			for (Method method : Incidente.class.getMethods()) {
+				if (("get" + this.columnName).equals(method.getName().toLowerCase()))
+					getter = method;
+				if (("set" + this.columnName).equals(method.getName().toLowerCase()))
+					setter = method;
+			}
+			if (getter == null)
+				Log.e("IncidentKey", "Not found: " + "get" + this.columnName);
+			if (setter == null)
+				Log.e("IncidentKey", "Not found: " + "set" + this.columnName);
+		}
+
+		String getColumnName() {
+			return this.columnName;
+		}
+
+		String getType() {
+			return this.type;
+		}
+
+		Object get(Incidente incidente) {
+			try {
+				return getter.invoke(incidente);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		void set(Incidente incidente, Object value) {
+			try {
+				setter.invoke(incidente, value);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	// Get All Books
+	public List<Incidente> getAllIncidents() {
+
+		List<Incidente> incidents = new LinkedList<Incidente>();
+
+		// 1. build the query
+		String query = "SELECT  * FROM " + DATABASE_TABLE;
+
+		// 2. get reference to writable DB
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+
+		// 3. go over each row, build book and add it to list
+		Incidente incident = null;
+		if (cursor.moveToFirst()) {
+			do {
+				incident = new Incidente();
+				IncidentKey[] keys = IncidentKey.values();
+				for (int i = 0; i < keys.length; i++) {
+					if (cursor.isNull(i))
+						continue;
+					else if (keys[i].getType() == "TEXT")
+						keys[i].set(incident, cursor.getString(i));
+					else if (keys[i].getType().startsWith("INTEGER"))
+						keys[i].set(incident, cursor.getLong(i));
+					else if (keys[i].getType() == "DOUBLE")
+						keys[i].set(incident, cursor.getDouble(i));
+				}
+				incidents.add(incident);
+			} while (cursor.moveToNext());
+		}
+
 		Log.d("getAllIncidents()", incidents.toString());
 
-        return incidents;
-    }
-    
-    private ContentValues makeValues(Incidente incident) {
-        ContentValues values = new ContentValues();
-        values.put(KEY_USPID, incident.getUspId());
-        values.put(KEY_USERNAME, incident.getUserName());
-        values.put(KEY_LATITUDE, incident.getLatitude());
-        values.put(KEY_LONGITUDE, incident.getLongitude());
-        values.put(KEY_FILE64, incident.getFile64());
-        values.put(KEY_DESCRIPTION, incident.getDescription());
-        values.put(KEY_LOCALIZATION, incident.getLocalization());
-        return values;
-    }
-    
-    public Long addIncident(Incidente incident) {
-    	long id = -1;
+		return incidents;
+	}
+
+	private ContentValues makeValues(Incidente incident) {
+		ContentValues values = new ContentValues();
+		IncidentKey[] keys = IncidentKey.values();
+		for (int i = 1; i < keys.length; i++) {
+			if (keys[i].getType() == "TEXT")
+				values.put(keys[i].getColumnName(),
+						(String) keys[i].get(incident));
+			else if (keys[i].getType().startsWith("INTEGER"))
+				values.put(keys[i].getColumnName(),
+						(Integer) keys[i].get(incident));
+			else if (keys[i].getType() == "DOUBLE")
+				values.put(keys[i].getColumnName(),
+						(Double) keys[i].get(incident));
+		}
+		return values;
+	}
+
+	public Long addIncident(Incidente incident) {
+		long id = -1;
 		// 1. get reference to writable DB
 		SQLiteDatabase db = this.getWritableDatabase();
-        // 2. insert
-        id = db.insert(DATABASE_TABLE, // table
-        		null, //nullColumnHack
-        		makeValues(incident)); // key/value -> keys = column names/ values = column values
-        db.close();
+		// 2. insert
+		id = db.insert(DATABASE_TABLE, // table
+				null, // nullColumnHack
+				makeValues(incident)); // key/value -> keys = column names/
+										// values = column values
+		db.close();
 		Log.d("addIncident()", Long.toString(id));
-    	return Long.valueOf(id);
-    }
-    
-    public void updateIncident(Incidente incident) {
-    	// 1. get reference to writable DB
-        SQLiteDatabase db = this.getWritableDatabase();
-        // 3. updating row
-        int i = db.update(DATABASE_TABLE, //table
-        		makeValues(incident), // column/value
-        		KEY_ID+" = ?", // selections
-                new String[] { String.valueOf(incident.getId()) }); //selection args
-        db.close();
+		return Long.valueOf(id);
+	}
+
+	public void updateIncident(Incidente incident) {
+		// 1. get reference to writable DB
+		SQLiteDatabase db = this.getWritableDatabase();
+		// 3. updating row
+		db.update(DATABASE_TABLE, // table
+				makeValues(incident), // column/value
+				IncidentKey.ID.getColumnName() + " = ?", // selections
+				new String[] { String.valueOf(incident.getId()) }); // selection
+																	// args
+		db.close();
 		Log.d("updateIncident()", incident.getId().toString());
-    }
-	
+	}
+
 }
