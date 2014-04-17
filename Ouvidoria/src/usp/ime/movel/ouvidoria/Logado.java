@@ -28,7 +28,6 @@ public class Logado extends OuvidoriaActivity implements OnClickListener {
 		mRegister = (Button) findViewById(R.id.register);
 		mRegister.setOnClickListener(this);
 		db = new SQLiteHelper(this);
-		checkIncidents();
 	}
 
 	private void checkIncidents() {
@@ -37,7 +36,7 @@ public class Logado extends OuvidoriaActivity implements OnClickListener {
 
 	@Override
 	public void onStart() {
-		super.onRestart();
+		super.onStart();
 		checkIncidents();
 	}
 

@@ -18,7 +18,6 @@ public class OuvidoriaActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		batteryState = new BatteryState();
 		connectionState = new ConnectionState(this);
-		registerReceivers();
 	}
 
 	protected BatteryState getBatteryState() {
@@ -37,8 +36,8 @@ public class OuvidoriaActivity extends Activity {
 	}
 
 	@Override
-	public void onRestart() {
-		super.onRestart();
+	public void onStart() {
+		super.onStart();
 		registerReceivers();
 	}
 

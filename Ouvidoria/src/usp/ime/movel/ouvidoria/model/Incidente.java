@@ -43,12 +43,17 @@ public class Incidente {
 		}
 		return null;
 	}
-	
+
 	public void makeCache(SQLiteHelper db) {
 		if (id == null)
 			id = db.addIncident(this);
 		else
 			db.updateIncident(this);
+	}
+
+	@Override
+	public String toString() {
+		return "[Incidente "+this.id+": "+this.description+"]";
 	}
 
 	public String getUspId() {
