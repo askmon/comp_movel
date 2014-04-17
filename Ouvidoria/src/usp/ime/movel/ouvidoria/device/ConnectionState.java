@@ -33,7 +33,6 @@ public class ConnectionState extends BroadcastReceiver {
 	 * http://paragchauhan2010.blogspot.com.br/2012/04/check-network-connection-using.html
 	 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
 	 */
-	
 
 	@Override
 	public void onReceive(Context context, Intent intent) {

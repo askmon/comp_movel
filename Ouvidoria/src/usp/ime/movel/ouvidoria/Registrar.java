@@ -5,12 +5,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.entity.StringEntity;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import usp.ime.movel.ouvidoria.device.SQLiteHelper;
+import usp.ime.movel.ouvidoria.model.Incidente;
 import usp.ime.movel.ouvidoria.web.HttpEntityProvider;
 import usp.ime.movel.ouvidoria.web.HttpPostRequester;
 import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
@@ -39,49 +41,46 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 		OnHttpResponseListener {
 
 	private Intent intent;
-	private String uspID;
-	private String userName;
 	private Button mPicture;
 	private Button mGPS;
 	private Button mEnviar;
 	private EditText description;
 	private EditText localization;
-	private Double latitude;
-	private Double longitude;
-	private String file64;
+	private Incidente incidente = new Incidente();
+	private SQLiteHelper db;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.registrar);
 		intent = getIntent();
-		uspID = intent.getStringExtra("uspid");
-		userName = intent.getStringExtra("username");
+		incidente.setUspId(intent.getStringExtra("uspid"));
+		incidente.setUserName(intent.getStringExtra("username"));
 		TextView user = (TextView) findViewById(R.id.textView1);
-		user.setText("Usuário: " + uspID);
+		user.setText("Usuário: " + incidente.getUspId());
 		description = (EditText) findViewById(R.id.description);
 		localization = (EditText) findViewById(R.id.location);
-		file64 = null;
-		latitude = null;
-		longitude = null;
 		mPicture = (Button) findViewById(R.id.picture);
 		mPicture.setOnClickListener(this);
 		mGPS = (Button) findViewById(R.id.gps);
 		mGPS.setOnClickListener(this);
 		mEnviar = (Button) findViewById(R.id.enviar);
 		mEnviar.setOnClickListener(this);
+		db = new SQLiteHelper(this);
+		List<Incidente> incidents = db.getAllIncidents();
 	}
 
 	public void getLocation() {
 		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		LocationListener locationListener = new LocationListener() {
 			public void onLocationChanged(Location location) {
-				latitude = location.getLatitude();
-				longitude = location.getLongitude();
+				incidente.setLatitude(location.getLatitude());
+				incidente.setLongitude(location.getLongitude());
 				TextView lat = (TextView) findViewById(R.id.lat);
-				lat.setText("Latitude: " + latitude.toString());
+				lat.setText("Latitude: " + incidente.getLatitude().toString());
 				TextView longi = (TextView) findViewById(R.id.longi);
-				longi.setText("Longitude: " + longitude.toString());
+				longi.setText("Longitude: "
+						+ incidente.getLongitude().toString());
 			}
 
 			public void onStatusChanged(String provider, int status,
@@ -144,7 +143,11 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 
 					public AbstractHttpEntity provideEntity() {
 						try {
-							return new StringEntity(makeJSONRequest()
+							incidente.setDescription(description.getText()
+									.toString());
+							incidente.setLocalization(localization.getText()
+									.toString());
+							return new StringEntity(incidente.toJSONObject()
 									.toString());
 						} catch (UnsupportedEncodingException e) {
 							e.printStackTrace();
@@ -203,31 +206,6 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 		Log.d("Resposta do Incidente", response.toString());
 	}
 
-	private JSONObject makeJSONRequest() {
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put("user", uspID);
-			obj.put("login", userName);
-			obj.put("description", description.getText().toString());
-			obj.put("localization", localization.getText().toString());
-			if (file64 != null)
-				obj.put("photo", file64);
-			if (latitude != null && longitude != null) {
-				obj.put("latitude", latitude.doubleValue());
-				obj.put("longitude", longitude.doubleValue());
-			}
-		} catch (JSONException e2) {
-			e2.printStackTrace();
-		}
-		JSONObject obj2 = new JSONObject();
-		try {
-			obj2.put("incidentrecord", obj);
-		} catch (JSONException e2) {
-			e2.printStackTrace();
-		}
-		return obj2;
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -235,7 +213,7 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 			File f = new File(Environment.getExternalStorageDirectory()
 					.toString() + "/ouvidoria.jpg");
 			try {
-				file64 = convertTo64(f);
+				incidente.setFile64(convertTo64(f));
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
