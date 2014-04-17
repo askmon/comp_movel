@@ -1,19 +1,16 @@
 package usp.ime.movel.ouvidoria.web.tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 
 import org.json.JSONObject;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import usp.ime.movel.ouvidoria.web.JSONParser;
 
-@RunWith(PowerMockRunner.class)
 public class JSONparserTest {
 
 	private JSONObject jsonObject;
@@ -34,8 +31,6 @@ public class JSONparserTest {
 		JSONParser jsonParser = new JSONParser(new ByteArrayInputStream(string.getBytes()));
 		jsonObject = jsonParser.parse();
 		assertNotNull(jsonObject);
-		//junit.framework.Assert.assertEquals(obj, jsonObject);
-		//org.junit.Assert.assertEquals(string, new JSONObject(jsonObject.toString()).toString());
-		//assertTrue(obj.equals(jsonObject));
+		assertEquals(obj.toString(), jsonObject.toString());
 	}
 }
