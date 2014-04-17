@@ -66,7 +66,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<Login>{
 		    }
 		});
 		getInstrumentation().waitForIdleSync();
-		getInstrumentation().sendStringSync("7157092");
+		getInstrumentation().sendStringSync("10001");
 		getInstrumentation().waitForIdleSync();
 
 		getInstrumentation().runOnMainSync(new Runnable() {
@@ -76,7 +76,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<Login>{
 		    }
 		});
 		getInstrumentation().waitForIdleSync();
-		getInstrumentation().sendStringSync("DiegoUSP");
+		getInstrumentation().sendStringSync("claropassobluestrawmeuthorium");
 		getInstrumentation().waitForIdleSync();
 
 

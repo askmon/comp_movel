@@ -23,8 +23,8 @@ public class RegistrarTest extends ActivityInstrumentationTestCase2<Registrar> {
 	protected void setUp() throws Exception {
 		super.setUp();
 		intent = new Intent();
-		intent.putExtra("username", "diegomartinez");
-		intent.putExtra("uspid", "7157092");
+		intent.putExtra("username", "teste");
+		intent.putExtra("uspid", "10001");
 		setActivityIntent(intent);
 		registrarActivity = getActivity();
 		pictureButton = (Button) registrarActivity.findViewById(R.id.picture);
@@ -52,7 +52,7 @@ public class RegistrarTest extends ActivityInstrumentationTestCase2<Registrar> {
 	}
 	
 	public void testUspidTextView_labelText() {
-		final String expected = "Usuário: 7157092";
+		final String expected = "Usuário: 10001";
 		final String actual = uspidTextView.getText().toString();
 		assertEquals(expected, actual);
 	}

@@ -4,10 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.util.Log;
 
 public class JSONparser {
 
@@ -23,8 +22,6 @@ public class JSONparser {
 	public JSONObject parse() {
 
 		try {
-			if (is == null)
-				Log.e("JSONParser", "Input stream is null");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					is, "iso-8859-1"), 8);
 			StringBuilder sb = new StringBuilder();
@@ -35,7 +32,6 @@ public class JSONparser {
 			is.close();
 			json = sb.toString();
 		} catch (IOException e) {
-			Log.e("Buffer Error", "Error converting result " + e.toString());
 			e.printStackTrace();
 		}
 
@@ -43,7 +39,6 @@ public class JSONparser {
 		try {
 			jObj = new JSONObject(json);
 		} catch (JSONException e) {
-			Log.e("JSON Parser", "text=" + json);
 			e.printStackTrace();
 		}
 

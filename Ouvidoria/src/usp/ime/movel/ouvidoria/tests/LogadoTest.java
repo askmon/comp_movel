@@ -25,7 +25,7 @@ public class LogadoTest extends ActivityInstrumentationTestCase2<Logado>{
 	protected void setUp() throws Exception {
 		super.setUp();
 		intent = new Intent();
-		intent.putExtra("username", "diegomartinez");
+		intent.putExtra("username", "teste");
 		setActivityIntent(intent);
 		logadoActivity = getActivity();
 		registerButton = (Button) logadoActivity.findViewById(R.id.register);
@@ -39,7 +39,7 @@ public class LogadoTest extends ActivityInstrumentationTestCase2<Logado>{
 	}
 
 	public void testUsernameTextView_labelText() {
-		final String expected = "Usuário: diegomartinez";
+		final String expected = "Usuário: teste";
 		final String actual = usernameTextView.getText().toString();
 		assertEquals(expected, actual);
 	}
