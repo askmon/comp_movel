@@ -40,7 +40,8 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 		OnHttpResponseListener {
 
 	private Intent intent;
-	private String username;
+	private String uspID;
+	private String userName;
 	private Button mPicture;
 	private Button mGPS;
 	private Button mEnviar;
@@ -55,9 +56,10 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.registrar);
 		intent = getIntent();
-		username = intent.getStringExtra("uspid");
+		uspID = intent.getStringExtra("uspid");
+		userName = intent.getStringExtra("username");
 		TextView user = (TextView) findViewById(R.id.textView1);
-		user.setText("Usuário: " + username);
+		user.setText("Usuário: " + uspID);
 		description = (EditText) findViewById(R.id.description);
 		localization = (EditText) findViewById(R.id.location);
 		file64 = null;
@@ -205,8 +207,8 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 	private JSONObject makeJSONRequest() {
 		JSONObject obj = new JSONObject();
 		try {
-			obj.put("user", username);
-			// obj.put("login", login); // TODO
+			obj.put("user", uspID);
+			obj.put("login", userName);
 			obj.put("description", description.getText().toString());
 			obj.put("localization", localization.getText().toString());
 			if (file64 != null)

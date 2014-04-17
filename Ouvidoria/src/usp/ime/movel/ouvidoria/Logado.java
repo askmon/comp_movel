@@ -10,8 +10,8 @@ import android.widget.TextView;
 public class Logado extends OuvidoriaActivity implements OnClickListener {
 
 	private Intent intent;
-	private String username;
-	private String uspid;
+	private String userName;
+	private String uspID;
 	private Button mRegister;
 	
 	@Override
@@ -19,10 +19,10 @@ public class Logado extends OuvidoriaActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.logado);
 		intent = getIntent();
-		username = intent.getStringExtra("username");
-		uspid = intent.getStringExtra("uspid");
+		userName = intent.getStringExtra("username");
+		uspID = intent.getStringExtra("uspid");
 		TextView user = (TextView)findViewById(R.id.textView1);
-		user.setText("Usuário: " + username);
+		user.setText("Usuário: " + userName);
 		mRegister = (Button) findViewById(R.id.register);
 		mRegister.setOnClickListener(this);
 	}
@@ -30,8 +30,8 @@ public class Logado extends OuvidoriaActivity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		Intent i = new Intent(Logado.this, Registrar.class);
-		i.putExtra("username", username);
-		i.putExtra("uspid", uspid);
+		i.putExtra("username", userName);
+		i.putExtra("uspid", uspID);
 		//finish();
 		startActivity(i);
 	}

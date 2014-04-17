@@ -39,9 +39,9 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 	private static final String TAG_USERNAME = "username";
 	// private static final String TAG_EMAIL = "email";
 	private static final String TAG_ERROR = "error";
-	private String name_user;
-	private String uspid;
-	private int ouvidor = 0;
+	private String userName;
+	private String uspID;
+	private boolean ouvidor = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +89,7 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 			break;
 		
 		case R.id.login_ouvidor:
-			ouvidor = 1;
+			ouvidor = true;
 			HttpEntityProvider provider_ouvidor = new HttpEntityProvider() {
 				public AbstractHttpEntity provideEntity() {
 					try {
@@ -124,7 +124,7 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 				if (success) {
 					Log.d("Login Successful!", response.toString());
 					message = "Entrou como " + response.getString(TAG_USERNAME);
-					name_user = response.getString(TAG_USERNAME);
+					userName = response.getString(TAG_USERNAME);
 				} else {
 					Log.d("Login Failure!", response.getString(TAG_ERROR));
 					message = response.getString(TAG_ERROR);
@@ -135,17 +135,17 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 			}
 		Toast.makeText(Login.this, message, Toast.LENGTH_LONG).show();
 		if (success) {
-			if(ouvidor == 0){
+			if(!ouvidor){
 				Intent i = new Intent(Login.this, Logado.class);
-				i.putExtra("username", name_user);
-				i.putExtra("uspid", uspid);
+				i.putExtra("username", userName);
+				i.putExtra("uspid", uspID);
 				finish();
 				startActivity(i);
 			}
 			else{
 				Intent i = new Intent(Login.this, LogadoOuvidor.class);
-				i.putExtra("username", name_user);
-				i.putExtra("uspid", uspid);
+				i.putExtra("username", userName);
+				i.putExtra("uspid", uspID);
 				finish();
 				startActivity(i);
 			}
@@ -153,11 +153,11 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 	}
 
 	private ArrayList<NameValuePair> makePostParams() {
-		uspid = user.getText().toString();
+		uspID = user.getText().toString();
 		String password = pass.getText().toString();
 		// Building Parameters
 		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("usp_id", uspid));
+		params.add(new BasicNameValuePair("usp_id", uspID));
 		params.add(new BasicNameValuePair("password", password));
 		return params;
 	}
