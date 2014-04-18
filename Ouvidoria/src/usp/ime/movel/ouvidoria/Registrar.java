@@ -12,9 +12,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import usp.ime.movel.ouvidoria.web.HttpEntityProvider;
-import usp.ime.movel.ouvidoria.web.HttpPostRequest;
+import usp.ime.movel.ouvidoria.web.HttpPostRequester;
 import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -159,8 +158,8 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 						return "application/json";
 					}
 				};
-				new HttpPostRequest(provider, this)
-						.execute("http://uspservices.deusanyjunior.dj/incidente");
+				new HttpPostRequester(this, provider)
+						.post("http://uspservices.deusanyjunior.dj/incidente");
 			}
 			break;
 
