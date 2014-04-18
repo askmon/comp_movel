@@ -96,6 +96,12 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 				0, locationListener);
 	}
 
+	private boolean isOkToSend() {
+		return getConnectionState().isConnected()
+				&& (getBatteryState().getLevel() > 15 || getConnectionState()
+						.getType() == "WIFI");
+	}
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -129,18 +135,7 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 			// TODO validar campos
 			incidente.setDescription(description.getText().toString());
 			incidente.setLocalization(localization.getText().toString());
-			boolean ok = true;
-			if (!getConnectionState().isConnected()) {
-				Toast.makeText(Registrar.this, "Sem conexão", Toast.LENGTH_LONG)
-						.show();
-				ok = false;
-			} else if (getBatteryState().getLevel() <= 15
-					&& getConnectionState().getType() != "WIFI") {
-				Toast.makeText(Registrar.this, "Pouca bateria e sem WIFI",
-						Toast.LENGTH_LONG).show();
-				ok = false;
-			}
-			if (ok) {
+			if (isOkToSend()) {
 				Toast.makeText(Registrar.this, "Enviando", Toast.LENGTH_LONG)
 						.show();
 				HttpEntityProvider provider = new HttpEntityProvider() {
@@ -165,8 +160,12 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 				};
 				new HttpPostRequester(this, provider)
 						.post("http://uspservices.deusanyjunior.dj/incidente");
-			} else
+			} else {
+				Toast.makeText(Registrar.this,
+						"Não foi possível enviar. Pendendo.", Toast.LENGTH_LONG)
+						.show();
 				incidente.makeCache(db);
+			}
 			break;
 
 		default:
