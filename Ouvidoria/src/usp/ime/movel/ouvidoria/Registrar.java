@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
@@ -134,7 +135,7 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 						.show();
 				HttpEntityProvider provider = new HttpEntityProvider() {
 
-					public AbstractHttpEntity provideEntity() {
+					public HttpEntity provideEntity() {
 						try {
 							return new StringEntity(incidente.toJSONObject()
 									.toString());

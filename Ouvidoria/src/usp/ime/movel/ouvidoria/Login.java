@@ -3,6 +3,7 @@ package usp.ime.movel.ouvidoria;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.entity.AbstractHttpEntity;
@@ -92,7 +93,7 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 		case R.id.login_ouvidor:
 			ouvidor = true;
 			HttpEntityProvider provider_ouvidor = new HttpEntityProvider() {
-				public AbstractHttpEntity provideEntity() {
+				public HttpEntity provideEntity() {
 					try {
 						return new UrlEncodedFormEntity(makePostParams());
 					} catch (UnsupportedEncodingException e) {

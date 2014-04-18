@@ -3,6 +3,7 @@ package usp.ime.movel.ouvidoria.web;
 import java.security.KeyStore;
 
 import org.apache.http.HttpVersion;
+import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
@@ -19,7 +20,7 @@ import org.apache.http.protocol.HTTP;
 public class InsecureHttpClientFactory implements HttpClientFactory {
 
 	// Código disponível em http://madurangasblogs.blogspot.com.br/2013/08/avoiding-javaxnetsslsslpeerunverifiedex.html	
-	public DefaultHttpClient makeHttpClient() {
+	public HttpClient makeHttpClient() {
 
 		try {
 			KeyStore trustStore = KeyStore.getInstance(KeyStore

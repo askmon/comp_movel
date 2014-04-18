@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
@@ -50,7 +51,7 @@ public class HttpPostRequester {
 		@Override
 		protected JSONObject doInBackground(String... params) {
 			String url = params[0];
-			DefaultHttpClient httpClient = clientFactory.makeHttpClient();
+			HttpClient httpClient = clientFactory.makeHttpClient();
 			HttpPost post = new HttpPost(url);
 			post.setEntity(entityProvider.provideEntity());
 			if (entityProvider.hasContentType()) {
