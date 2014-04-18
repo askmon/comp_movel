@@ -19,5 +19,6 @@
     <string name="enviar">Enviar</string>
     <string name="gps">Adicionar local via GPS</string>
     <string name="list_new">Listar novos incidentes</string>
+    <string name="map">Mostrar mapa</string>
 
 </resources>
