@@ -29,6 +29,8 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 	private EditText user, pass;
 	private Button mSubmit;
 	private Button mSubmitOuvidor;
+	private boolean check = false;
+	private String responseMessage;
 
 	private static final String LOGIN_URL = "https://social.stoa.usp.br/plugin/stoa/authenticate/";
 
@@ -110,12 +112,14 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 
 	@Override
 	public void onHttpResponse(JSONObject response) {
+		check = true;
 		boolean success;
-		String message;
+		String message = "";
 		if (response == null) {
-			message = "Sem resposta do servidor";
+			responseMessage = message = "Sem resposta do servidor";
 			return;
 		} else
+			responseMessage = response.toString();
 			try {
 				Log.d("Login attempt", response.toString());
 				// json success tag
@@ -132,23 +136,25 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 				e.printStackTrace();
 				return;
 			}
-		Toast.makeText(Login.this, message, Toast.LENGTH_LONG).show();
-		if (success) {
-			if(!ouvidor){
-				Intent i = new Intent(Login.this, Logado.class);
-				i.putExtra("username", userName);
-				i.putExtra("uspid", uspID);
-				finish();
-				startActivity(i);
+		try {
+			Toast.makeText(Login.this, message, Toast.LENGTH_LONG).show();
+			if (success) {
+				if(!ouvidor){
+					Intent i = new Intent(Login.this, Logado.class);
+					i.putExtra("username", userName);
+					i.putExtra("uspid", uspID);
+					finish();
+					startActivity(i);
+				}
+				else{
+					Intent i = new Intent(Login.this, LogadoOuvidor.class);
+					i.putExtra("username", userName);
+					i.putExtra("uspid", uspID);
+					finish();
+					startActivity(i);
+				}
 			}
-			else{
-				Intent i = new Intent(Login.this, LogadoOuvidor.class);
-				i.putExtra("username", userName);
-				i.putExtra("uspid", uspID);
-				finish();
-				startActivity(i);
-			}
-		}
+		} catch (Exception e) {	}
 	}
 
 	private ArrayList<NameValuePair> makePostParams() {
@@ -161,4 +167,11 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 		return params;
 	}
 
+	public boolean getCheck() {
+		return check;
+	}
+	
+	public String getResponseMessage() {
+		return responseMessage;
+	}
 }
