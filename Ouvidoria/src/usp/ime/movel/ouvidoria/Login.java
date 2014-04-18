@@ -11,10 +11,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import usp.ime.movel.ouvidoria.web.HttpEntityProvider;
-import usp.ime.movel.ouvidoria.web.HttpPostRequest;
+import usp.ime.movel.ouvidoria.web.HttpPostRequester;
 import usp.ime.movel.ouvidoria.web.InsecureHttpClientFactory;
 import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -83,8 +82,8 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 						return null;
 					}
 				};
-				new HttpPostRequest(provider, new InsecureHttpClientFactory(),
-						this).execute(LOGIN_URL);
+				new HttpPostRequester(this, new InsecureHttpClientFactory(),
+						provider).post(LOGIN_URL);
 			}
 			break;
 		
@@ -100,8 +99,8 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 					return null;
 				}
 			};
-			new HttpPostRequest(provider_ouvidor, new InsecureHttpClientFactory(), this)
-					.execute(LOGIN_URL);
+			new HttpPostRequester(this, new InsecureHttpClientFactory(), provider_ouvidor)
+					.post(LOGIN_URL);
 			break;
 
 		default:

@@ -14,16 +14,23 @@ import android.os.AsyncTask;
 
 public class HttpPostRequester {
 
+	private HttpClientFactory clientFactory;
 	private OnHttpResponseListener httpResponseListener;
 	private HttpEntityProvider entityProvider;
 	
 	public HttpPostRequester(OnHttpResponseListener httpResponseListener, HttpEntityProvider entityProvider) {
+		this(httpResponseListener, new DefaultHttpClientFactory(), entityProvider);
+	}
+
+	public HttpPostRequester(OnHttpResponseListener httpResponseListener,
+			HttpClientFactory clientFactory, HttpEntityProvider entityProvider) {
 		this.httpResponseListener = httpResponseListener;
 		this.entityProvider = entityProvider;
+		this.clientFactory = clientFactory;
 	}
 	
 	public void post(String url) {
-		new HttpPostRequest(entityProvider, httpResponseListener).execute(url);
+		new HttpPostRequest(entityProvider, clientFactory, httpResponseListener).execute(url);
 	}
 	
 	private class HttpPostRequest extends AsyncTask<String, String, JSONObject> {
@@ -38,11 +45,6 @@ public class HttpPostRequester {
 			this.entityProvider = entityProvider;
 			this.clientFactory = clientFactory;
 			this.responseListener = responseListener;
-		}
-
-		public HttpPostRequest(HttpEntityProvider entityProvider,
-				OnHttpResponseListener responseListener) {
-			this(entityProvider, new DefaultHttpClientFactory(), responseListener);
 		}
 
 		@Override
