@@ -15,7 +15,10 @@ import usp.ime.movel.ouvidoria.web.HttpGetRequest;
 import usp.ime.movel.ouvidoria.web.InsecureHttpClientFactory;
 import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Base64;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -63,21 +66,26 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		ImageView im4 = (ImageView) findViewById(R.id.ivImage4);
 		ImageView im5 = (ImageView) findViewById(R.id.ivImage5);
 		oc1.setText(parseJSON(jsons, 0));
+		im1.setImageBitmap(BitmapFromFile(jsons, 0));
 		oc2.setText(parseJSON(jsons, 1));
+		im2.setImageBitmap(BitmapFromFile(jsons, 1));
 		oc3.setText(parseJSON(jsons, 2));
+		im3.setImageBitmap(BitmapFromFile(jsons, 2));
 		oc4.setText(parseJSON(jsons, 3));
+		im4.setImageBitmap(BitmapFromFile(jsons, 3));
 		oc5.setText(parseJSON(jsons, 4));
+		im5.setImageBitmap(BitmapFromFile(jsons, 4));
 	}
 
 	private String parseJSON(JSONArray array, int index) {
 		try {
 			return "Descrição: "
-					+ array.getJSONObject(index)
+					+ array.getJSONObject(array.length() - 1 - index)
 							.getJSONObject("incidentrecord")
 							.getString("description")
 					+ "\n"
 					+ "Local: "
-					+ array.getJSONObject(index)
+					+ array.getJSONObject(array.length() - 1 - index)
 							.getJSONObject("incidentrecord")
 							.getString("localization") + "\n";
 		} catch (JSONException e) {
@@ -110,6 +118,32 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 			e.printStackTrace();
 		}
 		return f;
+	}
+	
+	private Bitmap BitmapFromFile(JSONArray array, int index){
+		String photo = null;
+		try {
+			photo = array.getJSONObject(array.length() - 1 - index)
+			.getJSONObject("incidentrecord")
+			.getString("photo");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		File f = FileFrom64(photo, Environment.getExternalStorageDirectory()
+				.toString() + "/ouvidoria" + index + ".jpg");
+		try {
+			Bitmap bm;
+			bm = BitmapFactory.decodeFile(f.getAbsolutePath());
+			if (bm == null)
+				System.out.println("bm ta null");
+			bm = Bitmap.createScaledBitmap(bm, 140, 140, true);
+			return bm;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
