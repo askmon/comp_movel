@@ -66,9 +66,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 			this.columnName = this.name().toLowerCase();
 			this.type = type;
 			for (Method method : Incidente.class.getMethods()) {
-				if (("get" + this.columnName).equals(method.getName().toLowerCase()))
+				if (("get" + this.columnName).equals(method.getName()
+						.toLowerCase()))
 					getter = method;
-				if (("set" + this.columnName).equals(method.getName().toLowerCase()))
+				if (("set" + this.columnName).equals(method.getName()
+						.toLowerCase()))
 					setter = method;
 			}
 			if (getter == null)
@@ -166,6 +168,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				null, // nullColumnHack
 				makeValues(incident)); // key/value -> keys = column names/
 										// values = column values
+		// 3. close
 		db.close();
 		Log.d("addIncident()", Long.toString(id));
 		return Long.valueOf(id);
@@ -180,8 +183,19 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				IncidentKey.ID.getColumnName() + " = ?", // selections
 				new String[] { String.valueOf(incident.getId()) }); // selection
 																	// args
+        // 4. close
 		db.close();
 		Log.d("updateIncident()", incident.getId().toString());
+	}
+
+	public void removeIncident(Incidente incidente) {
+		// 1. get reference to writable DB
+		SQLiteDatabase db = this.getWritableDatabase();
+		// 2. delete
+		db.delete(DATABASE_TABLE, IncidentKey.ID.getColumnName() + " = ?",
+				new String[] { String.valueOf(incidente.getId()) });
+        // 3. close
+        db.close();
 	}
 
 }

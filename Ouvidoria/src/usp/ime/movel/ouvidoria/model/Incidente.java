@@ -50,6 +50,11 @@ public class Incidente {
 		else
 			db.updateIncident(this);
 	}
+	
+	public void cleanCache(SQLiteHelper db) {
+		if (id != null)
+			db.removeIncident(this);
+	}
 
 	@Override
 	public String toString() {

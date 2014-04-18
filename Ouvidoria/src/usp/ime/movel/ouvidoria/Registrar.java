@@ -96,17 +96,11 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 				0, locationListener);
 	}
 
-	private boolean isOkToSend() {
-		return getConnectionState().isConnected()
-				&& (getBatteryState().getLevel() > 15 || getConnectionState()
-						.getType() == "WIFI");
-	}
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.picture:
-			if (getBatteryState().getLevel() > 15) {
+			if (isBatteryOk()) {
 				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 				File f = new File(
 						android.os.Environment.getExternalStorageDirectory(),
@@ -121,7 +115,7 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 			break;
 
 		case R.id.gps:
-			if (getBatteryState().getLevel() > 15) {
+			if (isBatteryOk()) {
 				Toast.makeText(Registrar.this, "Obtendo localização",
 						Toast.LENGTH_LONG).show();
 				getLocation();
@@ -161,10 +155,12 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 				new HttpPostRequester(this, provider)
 						.post("http://uspservices.deusanyjunior.dj/incidente");
 			} else {
-				Toast.makeText(Registrar.this,
-						"Não foi possível enviar. Pendendo.", Toast.LENGTH_LONG)
-						.show();
+				Toast.makeText(
+						Registrar.this,
+						"Falha ao enviar. Uma nova tentativa será realizada quando possível.",
+						Toast.LENGTH_LONG).show();
 				incidente.makeCache(db);
+				finish();
 			}
 			break;
 
@@ -199,11 +195,17 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 	@Override
 	public void onHttpResponse(JSONObject response) {
 		if (response == null) {
-			Toast.makeText(Registrar.this, "Falha", Toast.LENGTH_LONG).show();
-			return;
+			Toast.makeText(
+					Registrar.this,
+					"Falha ao enviar. Uma nova tentativa será realizada quando possível.",
+					Toast.LENGTH_LONG).show();
+			incidente.makeCache(db);
+		} else {
+			Toast.makeText(Registrar.this, "Enviado", Toast.LENGTH_LONG).show();
+			Log.d("Resposta do Incidente", response.toString());
 		}
-		Toast.makeText(Registrar.this, "Enviado", Toast.LENGTH_LONG).show();
-		Log.d("Resposta do Incidente", response.toString());
+		finish();
+		// TODO: travar a Activity enquanto a requisição não termina?
 	}
 
 	@Override

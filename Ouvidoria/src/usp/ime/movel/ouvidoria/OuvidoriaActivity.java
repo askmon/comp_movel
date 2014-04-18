@@ -28,6 +28,16 @@ public class OuvidoriaActivity extends Activity {
 		return connectionState;
 	}
 
+	protected boolean isOkToSend() {
+		return getConnectionState().isConnected()
+				&& (isBatteryOk() || getConnectionState()
+						.getType() == "WIFI");
+	}
+
+	protected boolean isBatteryOk() {
+		return getBatteryState().getLevel() > 15;
+	}
+
 	private void registerReceivers () {
 		registerReceiver(batteryState, new IntentFilter(
 				Intent.ACTION_BATTERY_CHANGED));
