@@ -5,14 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.apache.http.impl.conn.DefaultClientConnection;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import usp.ime.movel.ouvidoria.web.DefaultHttpClientFactory;
-import usp.ime.movel.ouvidoria.web.HttpGetRequest;
-import usp.ime.movel.ouvidoria.web.InsecureHttpClientFactory;
+import usp.ime.movel.ouvidoria.web.HttpGetRequester;
 import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,6 +25,7 @@ import android.widget.TextView;
 public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		OnHttpResponseListener {
 
+	private boolean check = false;
 	private Intent intent;
 	private String status;
 
@@ -39,13 +37,13 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		status = "Carregando";
 		TextView stats = (TextView) findViewById(R.id.textView1);
 		stats.setText(status);
-		new HttpGetRequest(this)
-				.execute("http://uspservices.deusanyjunior.dj/incidente/1.json");
+		new HttpGetRequester(this)
+				.get("http://uspservices.deusanyjunior.dj/incidente/1.json");
 	}
 
 	@Override
 	public void onHttpResponse(JSONObject response) {
-		// TODO Auto-generated method stub
+		check = true;
 		JSONArray jsons = null;
 		try {
 			jsons = response.getJSONArray("incidentrecordlist");
@@ -53,28 +51,30 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		TextView stats = (TextView) findViewById(R.id.textView1);
-		stats.setText("");
-		TextView oc1 = (TextView) findViewById(R.id.ocorrencia1);
-		TextView oc2 = (TextView) findViewById(R.id.ocorrencia2);
-		TextView oc3 = (TextView) findViewById(R.id.ocorrencia3);
-		TextView oc4 = (TextView) findViewById(R.id.ocorrencia4);
-		TextView oc5 = (TextView) findViewById(R.id.ocorrencia5);
-		ImageView im1 = (ImageView) findViewById(R.id.ivImage1);
-		ImageView im2 = (ImageView) findViewById(R.id.ivImage2);
-		ImageView im3 = (ImageView) findViewById(R.id.ivImage3);
-		ImageView im4 = (ImageView) findViewById(R.id.ivImage4);
-		ImageView im5 = (ImageView) findViewById(R.id.ivImage5);
-		oc1.setText(parseJSON(jsons, 0));
-		im1.setImageBitmap(BitmapFromFile(jsons, 0));
-		oc2.setText(parseJSON(jsons, 1));
-		im2.setImageBitmap(BitmapFromFile(jsons, 1));
-		oc3.setText(parseJSON(jsons, 2));
-		im3.setImageBitmap(BitmapFromFile(jsons, 2));
-		oc4.setText(parseJSON(jsons, 3));
-		im4.setImageBitmap(BitmapFromFile(jsons, 3));
-		oc5.setText(parseJSON(jsons, 4));
-		im5.setImageBitmap(BitmapFromFile(jsons, 4));
+		try {
+			TextView stats = (TextView) findViewById(R.id.textView1);
+			stats.setText("");
+			TextView oc1 = (TextView) findViewById(R.id.ocorrencia1);
+			TextView oc2 = (TextView) findViewById(R.id.ocorrencia2);
+			TextView oc3 = (TextView) findViewById(R.id.ocorrencia3);
+			TextView oc4 = (TextView) findViewById(R.id.ocorrencia4);
+			TextView oc5 = (TextView) findViewById(R.id.ocorrencia5);
+			ImageView im1 = (ImageView) findViewById(R.id.ivImage1);
+			ImageView im2 = (ImageView) findViewById(R.id.ivImage2);
+			ImageView im3 = (ImageView) findViewById(R.id.ivImage3);
+			ImageView im4 = (ImageView) findViewById(R.id.ivImage4);
+			ImageView im5 = (ImageView) findViewById(R.id.ivImage5);
+			oc1.setText(parseJSON(jsons, 0));
+			im1.setImageBitmap(BitmapFromFile(jsons, 0));
+			oc2.setText(parseJSON(jsons, 1));
+			im2.setImageBitmap(BitmapFromFile(jsons, 1));
+			oc3.setText(parseJSON(jsons, 2));
+			im3.setImageBitmap(BitmapFromFile(jsons, 2));
+			oc4.setText(parseJSON(jsons, 3));
+			im4.setImageBitmap(BitmapFromFile(jsons, 3));
+			oc5.setText(parseJSON(jsons, 4));
+			im5.setImageBitmap(BitmapFromFile(jsons, 4));
+		} catch (Exception e) {}
 	}
 
 	private String parseJSON(JSONArray array, int index) {
@@ -113,6 +113,7 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		}
 		try {
 			osf.flush();
+			osf.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -152,4 +153,7 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 
 	}
 
+	public boolean getCheck(){
+		return check;
+	}
 }
