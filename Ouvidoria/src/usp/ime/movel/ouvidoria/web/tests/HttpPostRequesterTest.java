@@ -24,9 +24,10 @@ import usp.ime.movel.ouvidoria.web.HttpClientFactory;
 import usp.ime.movel.ouvidoria.web.HttpEntityProvider;
 import usp.ime.movel.ouvidoria.web.HttpPostRequester;
 import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
+import android.test.InstrumentationTestCase;
 import android.test.UiThreadTest;
 
-public class HttpPostRequesterTest extends TestCase {
+public class HttpPostRequesterTest extends InstrumentationTestCase {
 
 	// Mocks
 	private HttpPostRequester requester;
@@ -43,6 +44,7 @@ public class HttpPostRequesterTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
+		System.setProperty("dexmaker.dexcache", getInstrumentation().getTargetContext().getCacheDir().getPath());
 		provider = mock(HttpEntityProvider.class);
 		requestEntity = mock(HttpEntity.class);
 		when(provider.provideEntity()).thenReturn(requestEntity);
@@ -64,7 +66,7 @@ public class HttpPostRequesterTest extends TestCase {
 
 		expectedResponse = "{\"ok\":true,\"nusp\":\"10001\",\"username\":\"teste\",\"email\":\"teste@example.com\"}";
 		HttpResponse response = mock(HttpResponse.class);
-		HttpEntity responseEntity = mock(AbstractHttpEntity.class);
+		HttpEntity responseEntity = mock(HttpEntity.class);
 
 		when(response.getEntity()).thenReturn(responseEntity);
 		when(client.execute(isA(HttpPost.class))).thenReturn(response);
@@ -82,7 +84,8 @@ public class HttpPostRequesterTest extends TestCase {
 		}).when(listener).onHttpResponse(any(JSONObject.class));
 
 		requester.post("https://social.stoa.usp.br/plugin/stoa/authenticate/");
-		signal.await(30, TimeUnit.SECONDS);
+		//signal.await(30, TimeUnit.SECONDS);
+		signal.await();
 
 		assertEquals(0, signal.getCount());
 		verify(provider).provideEntity();

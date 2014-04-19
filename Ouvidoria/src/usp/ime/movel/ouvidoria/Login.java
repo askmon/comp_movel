@@ -11,6 +11,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import usp.ime.movel.ouvidoria.web.AbstractHttpEntityProvider;
 import usp.ime.movel.ouvidoria.web.HttpEntityProvider;
 import usp.ime.movel.ouvidoria.web.HttpPostRequester;
 import usp.ime.movel.ouvidoria.web.InsecureHttpClientFactory;
@@ -75,7 +76,7 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 				Toast.makeText(Login.this, "Pouca bateria e sem WIFI",
 						Toast.LENGTH_LONG).show();
 			} else {
-				HttpEntityProvider provider = new HttpEntityProvider() {
+				HttpEntityProvider provider = new AbstractHttpEntityProvider() {
 					public AbstractHttpEntity provideEntity() {
 						try {
 							return new UrlEncodedFormEntity(makePostParams());
@@ -92,7 +93,7 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 		
 		case R.id.login_ouvidor:
 			ouvidor = true;
-			HttpEntityProvider provider_ouvidor = new HttpEntityProvider() {
+			HttpEntityProvider provider_ouvidor = new AbstractHttpEntityProvider() {
 				public HttpEntity provideEntity() {
 					try {
 						return new UrlEncodedFormEntity(makePostParams());

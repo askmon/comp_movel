@@ -2,16 +2,12 @@ package usp.ime.movel.ouvidoria.web;
 
 import org.apache.http.HttpEntity;
 
-public abstract class HttpEntityProvider {
+public interface HttpEntityProvider {
 
-	public abstract HttpEntity provideEntity();
+	public HttpEntity provideEntity();
 
-	public boolean hasContentType() {
-		return false;
-	}
+	public boolean hasContentType();
 
-	public String getContentType() {
-		return null;
-	}
+	public String getContentType();
 
 }
