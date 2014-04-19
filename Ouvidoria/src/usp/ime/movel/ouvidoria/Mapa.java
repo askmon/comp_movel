@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import usp.ime.movel.ouvidoria.web.HttpGetRequest;
+import usp.ime.movel.ouvidoria.web.HttpGetRequester;
 import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -37,7 +37,7 @@ public class Mapa extends OuvidoriaActivity implements OnHttpResponseListener {
 					findFragmentById(R.id.map)).getMap();
         }
 		googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-		new HttpGetRequest(this).execute("http://uspservices.deusanyjunior.dj/incidente/1.json");
+		new HttpGetRequester(this).get("http://uspservices.deusanyjunior.dj/incidente/1.json");
 
 		
 

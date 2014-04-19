@@ -6,7 +6,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.entity.AbstractHttpEntity;
 
 import usp.ime.movel.ouvidoria.web.HttpEntityProvider;
-import usp.ime.movel.ouvidoria.web.HttpPostRequest;
 import usp.ime.movel.ouvidoria.web.InsecureHttpClientFactory;
 import android.content.Intent;
 import android.os.Bundle;
