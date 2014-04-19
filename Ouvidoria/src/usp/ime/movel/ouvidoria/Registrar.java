@@ -153,7 +153,7 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 					}
 				};
 				new HttpPostRequester(this, provider)
-						.post("http://uspservices.deusanyjunior.dj/incidente");
+						.asyncPost("http://uspservices.deusanyjunior.dj/incidente");
 			} else {
 				Toast.makeText(
 						Registrar.this,

@@ -87,7 +87,7 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 					}
 				};
 				new HttpPostRequester(this, new InsecureHttpClientFactory(),
-						provider).post(LOGIN_URL);
+						provider).asyncPost(LOGIN_URL);
 			}
 			break;
 		
@@ -104,7 +104,7 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 				}
 			};
 			new HttpPostRequester(this, new InsecureHttpClientFactory(), provider_ouvidor)
-					.post(LOGIN_URL);
+					.asyncPost(LOGIN_URL);
 			break;
 
 		default:

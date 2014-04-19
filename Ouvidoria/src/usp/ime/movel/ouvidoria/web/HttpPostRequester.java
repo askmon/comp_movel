@@ -29,46 +29,44 @@ public class HttpPostRequester {
 		this.clientFactory = clientFactory;
 	}
 	
-	public void post(String url) {
-		new HttpPostRequest(entityProvider, clientFactory, httpResponseListener).execute(url);
+	public void asyncPost(String url) {
+		new HttpPostRequest(httpResponseListener).execute(url);
+	}
+	
+	public JSONObject post(String url) {
+		HttpClient httpClient = clientFactory.makeHttpClient();
+		HttpPost post = new HttpPost(url);
+		post.setEntity(entityProvider.provideEntity());
+		if (entityProvider.hasContentType()) {
+			String contentType = entityProvider.getContentType();
+			post.setHeader("Accept", contentType);
+			post.setHeader("Content-type", contentType);
+		}
+		try {
+			HttpResponse response = httpClient.execute(post);
+			HttpEntity entity = response.getEntity();
+			if (entity != null)
+				return new JSONParser(entity.getContent()).parse();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	private class HttpPostRequest extends AsyncTask<String, String, JSONObject> {
 
-		private HttpEntityProvider entityProvider;
-		private HttpClientFactory clientFactory;
 		private OnHttpResponseListener responseListener;
 
-		public HttpPostRequest(HttpEntityProvider entityProvider,
-				HttpClientFactory clientFactory,
-				OnHttpResponseListener responseListener) {
-			this.entityProvider = entityProvider;
-			this.clientFactory = clientFactory;
+		public HttpPostRequest(OnHttpResponseListener responseListener) {
 			this.responseListener = responseListener;
 		}
 
 		@Override
 		protected JSONObject doInBackground(String... params) {
 			String url = params[0];
-			HttpClient httpClient = clientFactory.makeHttpClient();
-			HttpPost post = new HttpPost(url);
-			post.setEntity(entityProvider.provideEntity());
-			if (entityProvider.hasContentType()) {
-				String contentType = entityProvider.getContentType();
-				post.setHeader("Accept", contentType);
-				post.setHeader("Content-type", contentType);
-			}
-			try {
-				HttpResponse response = httpClient.execute(post);
-				HttpEntity entity = response.getEntity();
-				if (entity != null)
-					return new JSONParser(entity.getContent()).parse();
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
+			return post(url);
 		}
 
 		protected void onPostExecute(JSONObject result) {
