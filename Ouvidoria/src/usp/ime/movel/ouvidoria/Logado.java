@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import usp.ime.movel.ouvidoria.device.SQLiteHelper;
 import usp.ime.movel.ouvidoria.model.Incidente;
 import usp.ime.movel.ouvidoria.web.HttpEntityProvider;
-import usp.ime.movel.ouvidoria.web.HttpPostRequest;
+import usp.ime.movel.ouvidoria.web.HttpPostRequester;
 import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
 import android.content.Intent;
 import android.os.Bundle;
@@ -50,7 +50,7 @@ public class Logado extends OuvidoriaActivity implements OnClickListener,
 
 	private void checkIncidents() {
 		List<Incidente> incidentes = db.getAllIncidents();
-		mIncidentCounter.setText("Envios pendentes: "+incidentes.size());
+		mIncidentCounter.setText("Envios pendentes: " + incidentes.size());
 		if (incidentePendendo != null || incidentes.isEmpty() || !isOkToSend())
 			return;
 		incidentePendendo = incidentes.get(0);
@@ -78,8 +78,8 @@ public class Logado extends OuvidoriaActivity implements OnClickListener,
 			}
 		};
 
-		new HttpPostRequest(provider, this)
-				.execute("http://uspservices.deusanyjunior.dj/incidente");
+		new HttpPostRequester(this, provider)
+				.post("http://uspservices.deusanyjunior.dj/incidente");
 	}
 
 	@Override
@@ -104,7 +104,8 @@ public class Logado extends OuvidoriaActivity implements OnClickListener,
 					"Falha ao enviar. Uma nova tentativa será realizada quando possível.",
 					Toast.LENGTH_LONG).show();
 		} else {
-			Toast.makeText(Logado.this, "Pendência enviada", Toast.LENGTH_LONG).show();
+			Toast.makeText(Logado.this, "Pendência enviada", Toast.LENGTH_LONG)
+					.show();
 			Log.d("Resposta do Incidente", response.toString());
 			incidentePendendo.cleanCache(db);
 		}
