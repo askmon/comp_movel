@@ -28,6 +28,7 @@ public class Logado extends OuvidoriaActivity implements OnClickListener,
 	private String userName;
 	private String uspID;
 	private Button mRegister;
+	private TextView mIncidentCounter;
 	private SQLiteHelper db;
 	private Incidente incidentePendendo;
 
@@ -42,15 +43,15 @@ public class Logado extends OuvidoriaActivity implements OnClickListener,
 		user.setText("Usuário: " + userName);
 		mRegister = (Button) findViewById(R.id.register);
 		mRegister.setOnClickListener(this);
+		mIncidentCounter = (TextView) findViewById(R.id.incidentCounter);
 		db = new SQLiteHelper(this);
 		incidentePendendo = null;
 	}
 
 	private void checkIncidents() {
-		if (incidentePendendo != null)
-			return;
 		List<Incidente> incidentes = db.getAllIncidents();
-		if (incidentes.isEmpty() || !isOkToSend())
+		mIncidentCounter.setText("Envios pendentes: "+incidentes.size());
+		if (incidentePendendo != null || incidentes.isEmpty() || !isOkToSend())
 			return;
 		incidentePendendo = incidentes.get(0);
 		Toast.makeText(Logado.this, "Enviando pendências", Toast.LENGTH_LONG)
