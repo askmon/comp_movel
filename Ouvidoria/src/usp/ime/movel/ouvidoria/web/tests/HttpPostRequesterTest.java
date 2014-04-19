@@ -53,11 +53,10 @@ public class HttpPostRequesterTest extends InstrumentationTestCase {
 		client = mock(HttpClient.class);
 		when(factory.makeHttpClient()).thenReturn(client);
 
-		listener = mock(OnHttpResponseListener.class);
+		//listener = mock(OnHttpResponseListener.class);
 
 		signal = new CountDownLatch(1);
 
-		requester = new HttpPostRequester(listener, factory, provider);
 	}
 
 	@UiThreadTest
@@ -67,25 +66,39 @@ public class HttpPostRequesterTest extends InstrumentationTestCase {
 		expectedResponse = "{\"ok\":true,\"nusp\":\"10001\",\"username\":\"teste\",\"email\":\"teste@example.com\"}";
 		HttpResponse response = mock(HttpResponse.class);
 		HttpEntity responseEntity = mock(HttpEntity.class);
+		listener = new OnHttpResponseListener() {
+			@Override
+			public void onHttpResponse(JSONObject response) {
+				JSONObject expectedJSON = null;
+				try {
+					expectedJSON = new JSONObject(expectedResponse);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				assertEquals(expectedJSON.toString(), response.toString());
+				signal.countDown();
+			}
+		};
 
 		when(response.getEntity()).thenReturn(responseEntity);
 		when(client.execute(isA(HttpPost.class))).thenReturn(response);
 		when(responseEntity.getContent()).thenReturn(
 				new ByteArrayInputStream(expectedResponse.getBytes()));
-		doAnswer(new Answer<Object>() {
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				JSONObject expectedJSON = new JSONObject(expectedResponse);
-				JSONObject response = (JSONObject) invocation.getArguments()[0];
-				assertEquals(expectedJSON.toString(), response.toString());
-				signal.countDown();
-				return null;
-			}
-		}).when(listener).onHttpResponse(any(JSONObject.class));
+//		doAnswer(new Answer<Object>() {
+//			@Override
+//			public Object answer(InvocationOnMock invocation) throws Throwable {
+//				JSONObject expectedJSON = new JSONObject(expectedResponse);
+//				JSONObject response = (JSONObject) invocation.getArguments()[0];
+//				assertEquals(expectedJSON.toString(), response.toString());
+//				signal.countDown();
+//				return null;
+//			}
+//		}).when(listener).onHttpResponse(any(JSONObject.class));
 
+		requester = new HttpPostRequester(listener, factory, provider);
 		requester.post("https://social.stoa.usp.br/plugin/stoa/authenticate/");
-		//signal.await(30, TimeUnit.SECONDS);
-		signal.await();
+		signal.await(30, TimeUnit.SECONDS);
+		//signal.await();
 
 		assertEquals(0, signal.getCount());
 		verify(provider).provideEntity();
