@@ -20,6 +20,9 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -59,6 +62,11 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		incidentImages[2] = (ImageView) findViewById(R.id.ivImage3);
 		incidentImages[3] = (ImageView) findViewById(R.id.ivImage4);
 		incidentImages[4] = (ImageView) findViewById(R.id.ivImage5);
+		registerForContextMenu(incidentTexts[0]);  
+		registerForContextMenu(incidentTexts[1]);
+		registerForContextMenu(incidentTexts[2]);
+		registerForContextMenu(incidentTexts[3]);
+		registerForContextMenu(incidentTexts[4]);
 		((Button) findViewById(R.id.left)).setOnClickListener(this);
 		((Button) findViewById(R.id.right)).setOnClickListener(this);
 		db = new SQLiteHelper(this);
@@ -68,6 +76,14 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 						+ (incidentes.size() + 1) + ".json", this);
 	}
 
+	 @Override  
+	 public void onCreateContextMenu(ContextMenu menu, View v,  
+	     ContextMenuInfo menuInfo) {  
+	     // TODO Auto-generated method stub  
+	     super.onCreateContextMenu(menu, v, menuInfo);  
+	     MenuInflater m = getMenuInflater();  
+	     m.inflate(R.menu.context, menu);  
+	}  
 	@Override
 	public void onHttpResponse(JSONObject response) {
 		JSONArray jsons = null;
