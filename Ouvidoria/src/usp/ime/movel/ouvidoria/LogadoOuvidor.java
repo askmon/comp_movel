@@ -27,8 +27,8 @@ public class LogadoOuvidor extends OuvidoriaActivity implements OnClickListener 
 		user.setText("Usuário: " + username);
 		mListnew = (Button) findViewById(R.id.listnew);
 		mListnew.setOnClickListener(this);
-		mListnew = (Button) findViewById(R.id.showmap);
-		mListnew.setOnClickListener(this);
+		mShowmap= (Button) findViewById(R.id.showmap);
+		mShowmap.setOnClickListener(this);
 	}
 
 	@Override

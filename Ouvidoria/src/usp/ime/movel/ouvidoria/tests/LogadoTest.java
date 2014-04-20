@@ -45,7 +45,7 @@ public class LogadoTest extends ActivityInstrumentationTestCase2<Logado>{
 	}
 
 	@MediumTest
-	public void testSendMessageToLogadoActivity() {
+	public void testSendMessageToRegistrarActivity() {
 		// Set up an ActivityMonitor
 		ActivityMonitor registrarMonitor =
 		        getInstrumentation().addMonitor(Registrar.class.getName(),
