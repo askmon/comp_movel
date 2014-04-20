@@ -46,14 +46,14 @@ public class Incidente {
 
 	public void makeCache(SQLiteHelper db) {
 		if (id == null)
-			id = db.addIncident(this);
+			id = db.addIncident(this, SQLiteHelper.PENDING_INCIDENT_TABLE);
 		else
-			db.updateIncident(this);
+			db.updateIncident(this, SQLiteHelper.PENDING_INCIDENT_TABLE);
 	}
 	
 	public void cleanCache(SQLiteHelper db) {
 		if (id != null)
-			db.removeIncident(this);
+			db.removeIncident(this, SQLiteHelper.PENDING_INCIDENT_TABLE);
 	}
 
 	@Override

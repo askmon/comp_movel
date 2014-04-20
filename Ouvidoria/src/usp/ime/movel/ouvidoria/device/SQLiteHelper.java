@@ -15,11 +15,12 @@ import android.util.Log;
 public class SQLiteHelper extends SQLiteOpenHelper {
 
 	// Database Version
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 	// Database Name
 	private static final String DATABASE_NAME = "OuvidoriaDB";
 	// Table Name
-	private static final String INCIDENT_TABLE = "incidents";
+	public static final String PENDING_INCIDENT_TABLE = "pending_incidents";
+	public static final String STORED_INCIDENT_TABLE = "stored_incidents";
 
 	public SQLiteHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -28,25 +29,34 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// SQL statement to create book table
-		String queryCode = "CREATE TABLE " + INCIDENT_TABLE + " ( ";
+		String middleQueryCode = "";
 
 		IncidentKey[] keys = IncidentKey.values();
 		for (int i = 0; i < keys.length; i++) {
-			queryCode += keys[i].getColumnName() + " " + keys[i].getType();
+			middleQueryCode += keys[i].getColumnName() + " "
+					+ keys[i].getType();
 			if (i + 1 < keys.length)
-				queryCode += ", ";
+				middleQueryCode += ", ";
 			else
-				queryCode += " )";
+				middleQueryCode += " )";
 		}
+		String queryCode = "CREATE TABLE " + PENDING_INCIDENT_TABLE + " ( "
+				+ middleQueryCode;
 		Log.d("DB QUERY", queryCode);
-		// create books table
+		db.execSQL(queryCode);
+		queryCode = "CREATE TABLE " + STORED_INCIDENT_TABLE + " ( "
+				+ middleQueryCode;
+		Log.d("DB QUERY", queryCode);
 		db.execSQL(queryCode);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// Drop older books table if existed
-		db.execSQL("DROP TABLE IF EXISTS " + INCIDENT_TABLE);
+		if (oldVersion <= 4)
+			db.execSQL("DROP TABLE IF EXISTS incidents");
+		db.execSQL("DROP TABLE IF EXISTS " + PENDING_INCIDENT_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + STORED_INCIDENT_TABLE);
 		// create fresh books table
 		this.onCreate(db);
 	}
@@ -106,12 +116,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	}
 
 	// Get All Books
-	public List<Incidente> getAllIncidents() {
+	public List<Incidente> getAllIncidents(String table) {
 
 		List<Incidente> incidents = new LinkedList<Incidente>();
 
 		// 1. build the query
-		String query = "SELECT  * FROM " + INCIDENT_TABLE;
+		String query = "SELECT  * FROM " + table;
 
 		// 2. get reference to writable DB
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -159,12 +169,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		return values;
 	}
 
-	public Long addIncident(Incidente incident) {
+	public Long addIncident(Incidente incident, String table) {
 		long id = -1;
 		// 1. get reference to writable DB
 		SQLiteDatabase db = this.getWritableDatabase();
 		// 2. insert
-		id = db.insert(INCIDENT_TABLE, // table
+		id = db.insert(table, // table
 				null, // nullColumnHack
 				makeValues(incident)); // key/value -> keys = column names/
 										// values = column values
@@ -174,28 +184,28 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		return Long.valueOf(id);
 	}
 
-	public void updateIncident(Incidente incident) {
+	public void updateIncident(Incidente incident, String table) {
 		// 1. get reference to writable DB
 		SQLiteDatabase db = this.getWritableDatabase();
 		// 3. updating row
-		db.update(INCIDENT_TABLE, // table
+		db.update(table, // table
 				makeValues(incident), // column/value
 				IncidentKey.ID.getColumnName() + " = ?", // selections
 				new String[] { String.valueOf(incident.getId()) }); // selection
 																	// args
-        // 4. close
+		// 4. close
 		db.close();
 		Log.d("updateIncident()", incident.getId().toString());
 	}
 
-	public void removeIncident(Incidente incidente) {
+	public void removeIncident(Incidente incidente, String table) {
 		// 1. get reference to writable DB
 		SQLiteDatabase db = this.getWritableDatabase();
 		// 2. delete
-		db.delete(INCIDENT_TABLE, IncidentKey.ID.getColumnName() + " = ?",
+		db.delete(table, IncidentKey.ID.getColumnName() + " = ?",
 				new String[] { String.valueOf(incidente.getId()) });
-        // 3. close
-        db.close();
+		// 3. close
+		db.close();
 	}
 
 }

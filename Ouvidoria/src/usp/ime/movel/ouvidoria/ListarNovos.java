@@ -25,7 +25,6 @@ import android.widget.TextView;
 public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		OnHttpResponseListener {
 
-	private boolean check = false;
 	private Intent intent;
 	private String status;
 	private int pageNumber;
@@ -59,7 +58,6 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 
 	@Override
 	public void onHttpResponse(JSONObject response) {
-		check = true;
 		JSONArray jsons = null;
 		try {
 			jsons = response.getJSONArray("incidentrecordlist");
@@ -71,8 +69,9 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 			stats.setText("Incidentes " + 5 * pageNumber + " a "
 					+ (5 * (pageNumber + 1) - 1));
 			for (int i = 0; i < 5; i++) {
-				incidentTexts[i].setText(parseJSON(jsons, 5*pageNumber+i));
-				incidentImages[i].setImageBitmap(BitmapFromFile(jsons, 5*pageNumber+i));
+				incidentTexts[i].setText(parseJSON(jsons, 5 * pageNumber + i));
+				incidentImages[i].setImageBitmap(BitmapFromFile(jsons, 5
+						* pageNumber + i));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,7 +90,6 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 							.getJSONObject("incidentrecord")
 							.getString("localization") + "\n";
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -103,21 +101,12 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		FileOutputStream osf = null;
 		try {
 			osf = new FileOutputStream(f);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try {
 			osf.write(btDataFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
 			osf.flush();
 			osf.close();
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return f;
@@ -129,7 +118,6 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 			photo = array.getJSONObject(array.length() - 1 - index)
 					.getJSONObject("incidentrecord").getString("photo");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		File f = FileFrom64(photo, Environment.getExternalStorageDirectory()
@@ -149,11 +137,6 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 
 	@Override
 	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
 
-	}
-
-	public boolean getCheck() {
-		return check;
 	}
 }

@@ -49,7 +49,7 @@ public class Logado extends OuvidoriaActivity implements OnClickListener,
 	}
 
 	private void checkIncidents() {
-		List<Incidente> incidentes = db.getAllIncidents();
+		List<Incidente> incidentes = db.getAllIncidents(SQLiteHelper.PENDING_INCIDENT_TABLE);
 		mIncidentCounter.setText("Envios pendentes: " + incidentes.size());
 		if (incidentePendendo != null || incidentes.isEmpty() || !isOkToSend())
 			return;
