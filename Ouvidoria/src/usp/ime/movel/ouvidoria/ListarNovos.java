@@ -6,7 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import usp.ime.movel.ouvidoria.model.Incidente;
+import usp.ime.movel.ouvidoria.web.HttpGetRequester;
+import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -15,14 +21,16 @@ import android.util.Base64;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
-		OnIncidenteUpdateListener {
+		OnIncidenteUpdateListener, OnHttpResponseListener {
 
 	private String status;
 	private int pageNumber;
@@ -30,6 +38,7 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 	private ImageView[] incidentImages;
 	private Long[] ids = new Long[5]; 
 	private IncidenteUpdater updater;
+	private int id;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +74,17 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 	 @Override  
 	 public void onCreateContextMenu(ContextMenu menu, View v,  
 	     ContextMenuInfo menuInfo) {  
-	     // TODO Auto-generated method stub  
 	     super.onCreateContextMenu(menu, v, menuInfo);  
 	     MenuInflater m = getMenuInflater();  
-	     m.inflate(R.menu.context, menu);  
+	     m.inflate(R.menu.context, menu);
+	     id = v.getId();
 	}  
+	 
+	@Override
+	public void onHttpResponse(JSONObject response) {
+		return; // TODO verificar melhor a resposta?
+	}
+
 	@Override
 	public void onIncidenteUpdate() {
 		TextView stats = (TextView) findViewById(R.id.textView1);
@@ -87,6 +102,124 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 					incidente.getFile64(), index));
 		}
 	}
+	
+	 @Override  
+	 public boolean onContextItemSelected(MenuItem item) {  
+	     switch(item.getItemId()){  
+	          case R.id.aberto:    
+	               switch (id){
+	               		case R.id.ocorrencia1:
+	               			new HttpGetRequester().asyncGet(
+	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[0] + "&status=Aberto", this);
+	               			break;
+	               		case R.id.ocorrencia2:
+	               			new HttpGetRequester().asyncGet(
+	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[1] + "&status=Aberto", this);
+	               			break;
+	               		case R.id.ocorrencia3:
+	               			new HttpGetRequester().asyncGet(
+	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[2] + "&status=Aberto", this);
+	               			break;
+	               		case R.id.ocorrencia4:
+	               			new HttpGetRequester().asyncGet(
+	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[3] + "&status=Aberto", this);
+	               			break;
+	               		case R.id.ocorrencia5:
+	               			new HttpGetRequester().asyncGet(
+	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[4] + "&status=Aberto", this);
+	               			break;
+	               		default:
+	               			break;
+	               }
+	               break;
+	               		case R.id.andamento:    
+	     	               switch (id){
+	     	               		case R.id.ocorrencia1:
+	     	               			new HttpGetRequester().asyncGet(
+	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[0] + "&status=Andamento", this);
+	     	               			break;
+	     	               		case R.id.ocorrencia2:
+	     	               			new HttpGetRequester().asyncGet(
+	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[1] + "&status=Andamento", this);
+	     	               			break;
+	     	               		case R.id.ocorrencia3:
+	     	               			new HttpGetRequester().asyncGet(
+	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[2] + "&status=Andamento", this);
+	     	               			break;
+	     	               		case R.id.ocorrencia4:
+	     	               			new HttpGetRequester().asyncGet(
+	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[3] + "&status=Andamento", this);
+	     	               			break;
+	     	               		case R.id.ocorrencia5:
+	     	               			new HttpGetRequester().asyncGet(
+	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[4] + "&status=Andamento", this);
+	     	               			break;
+	     	               		default:
+	     	               			break;
+	     	               }
+	     	               break;
+	     	               	case R.id.oculto:    
+	 	     	               switch (id){
+	 	     	               		case R.id.ocorrencia1:
+	 	     	               			new HttpGetRequester().asyncGet(
+	 	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[0] + "&status=Oculto", this);
+	 	     	               			System.out.println("http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[0] + "&status=Oculto");
+	 	     	               			break;
+	 	     	               		case R.id.ocorrencia2:
+	 	     	               			new HttpGetRequester().asyncGet(
+	 	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[1] + "&status=Oculto", this);
+	 	     	               			break;
+	 	     	               		case R.id.ocorrencia3:
+	 	     	               			new HttpGetRequester().asyncGet(
+	 	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[2] + "&status=Oculto", this);
+	 	     	               			break;
+	 	     	               		case R.id.ocorrencia4:
+	 	     	               			new HttpGetRequester().asyncGet(
+	 	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[3] + "&status=Oculto", this);
+	 	     	               			break;
+	 	     	               		case R.id.ocorrencia5:
+	 	     	               			new HttpGetRequester().asyncGet(
+	 	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[4] + "&status=Oculto", this);
+	 	     	               			break;
+	 	     	               		default:
+	 	     	               			break;
+	 	     	               }
+	 	     	               break;
+	 	     	               	case R.id.resolvido:    
+	 	 	     	               switch (id){
+	 	 	     	               		case R.id.ocorrencia1:
+	 	 	     	               			new HttpGetRequester().asyncGet(
+	 	 	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[0] + "&status=Resolvido", this);
+	 	 	     	               			System.out.println("Entrou onde n devia");
+	 	 	     	               			break;
+	 	 	     	               		case R.id.ocorrencia2:
+	 	 	     	               			new HttpGetRequester().asyncGet(
+	 	 	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[1] + "&status=Resolvido", this);
+	 	 	     	               			break;
+	 	 	     	               		case R.id.ocorrencia3:
+	 	 	     	               			new HttpGetRequester().asyncGet(
+	 	 	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[2] + "&status=Resolvido", this);
+	 	 	     	               			break;
+	 	 	     	               		case R.id.ocorrencia4:
+	 	 	     	               			new HttpGetRequester().asyncGet(
+	 	 	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[3] + "&status=Resolvido", this);
+	 	 	     	               			break;
+	 	 	     	               		case R.id.ocorrencia5:
+	 	 	     	               			new HttpGetRequester().asyncGet(
+	 	 	     	               					"http://uspservices.deusanyjunior.dj/incidentrecords/set_status.json?id="+ ids[4] + "&status=Resolvido", this);
+	 	 	     	               			break;
+	 	 	     	               		default:
+	 	 	     	               			break;
+	 	 	     	               }
+	 	 	     	               break;
+	 	     	               	default:
+	 	     	               		break;
+	 	     	               		
+	               }
+	               
+	     
+	     return super.onContextItemSelected(item);  
+	   }  
 
 	private String makeIncidentText(Incidente incidente) {
 		return "----------\n" + "Descrição: " + incidente.getDescription()
