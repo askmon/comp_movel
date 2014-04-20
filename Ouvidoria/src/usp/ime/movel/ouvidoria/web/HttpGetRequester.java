@@ -13,16 +13,14 @@ import android.os.AsyncTask;
 
 public class HttpGetRequester {
 
-	private OnHttpResponseListener httpResponseListener;
 	private HttpClientFactory clientFactory;
 
-	public HttpGetRequester(OnHttpResponseListener httpResponseListener, HttpClientFactory clientFactory) {
-		this.httpResponseListener = httpResponseListener;
+	public HttpGetRequester(HttpClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
 	}
 	
-	public HttpGetRequester(OnHttpResponseListener httpResponseListener) {
-		this(httpResponseListener, new DefaultHttpClientFactory());
+	public HttpGetRequester() {
+		this(new DefaultHttpClientFactory());
 	}
 
 	public JSONObject get(String url) {
@@ -41,7 +39,7 @@ public class HttpGetRequester {
 		return null;
 	}
 
-	public void asyncGet(String url) {
+	public void asyncGet(String url, OnHttpResponseListener httpResponseListener) {
 		new HttpGetRequest(httpResponseListener).execute(url);
 	}
 

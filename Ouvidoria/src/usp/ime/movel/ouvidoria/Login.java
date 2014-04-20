@@ -50,7 +50,7 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
-		
+
 		// setup input fields
 		user = (EditText) findViewById(R.id.username);
 		pass = (EditText) findViewById(R.id.password);
@@ -86,11 +86,11 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 						return null;
 					}
 				};
-				new HttpPostRequester(this, new InsecureHttpClientFactory(),
-						provider).asyncPost(LOGIN_URL);
+				new HttpPostRequester(new InsecureHttpClientFactory(), provider)
+						.asyncPost(LOGIN_URL, this);
 			}
 			break;
-		
+
 		case R.id.login_ouvidor:
 			ouvidor = true;
 			HttpEntityProvider provider_ouvidor = new AbstractHttpEntityProvider() {
@@ -103,8 +103,8 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 					return null;
 				}
 			};
-			new HttpPostRequester(this, new InsecureHttpClientFactory(), provider_ouvidor)
-					.asyncPost(LOGIN_URL);
+			new HttpPostRequester(new InsecureHttpClientFactory(),
+					provider_ouvidor).asyncPost(LOGIN_URL, this);
 			break;
 
 		default:
@@ -122,33 +122,32 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 			return;
 		} else
 			responseMessage = response.toString();
-			try {
-				Log.d("Login attempt", response.toString());
-				// json success tag
-				success = response.getBoolean(TAG_SUCCESS);
-				if (success) {
-					Log.d("Login Successful!", response.toString());
-					message = "Entrou como " + response.getString(TAG_USERNAME);
-					userName = response.getString(TAG_USERNAME);
-				} else {
-					Log.d("Login Failure!", response.getString(TAG_ERROR));
-					message = response.getString(TAG_ERROR);
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-				return;
+		try {
+			Log.d("Login attempt", response.toString());
+			// json success tag
+			success = response.getBoolean(TAG_SUCCESS);
+			if (success) {
+				Log.d("Login Successful!", response.toString());
+				message = "Entrou como " + response.getString(TAG_USERNAME);
+				userName = response.getString(TAG_USERNAME);
+			} else {
+				Log.d("Login Failure!", response.getString(TAG_ERROR));
+				message = response.getString(TAG_ERROR);
 			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return;
+		}
 		try {
 			Toast.makeText(Login.this, message, Toast.LENGTH_LONG).show();
 			if (success) {
-				if(!ouvidor){
+				if (!ouvidor) {
 					Intent i = new Intent(Login.this, Logado.class);
 					i.putExtra("username", userName);
 					i.putExtra("uspid", uspID);
 					finish();
 					startActivity(i);
-				}
-				else{
+				} else {
 					Intent i = new Intent(Login.this, LogadoOuvidor.class);
 					i.putExtra("username", userName);
 					i.putExtra("uspid", uspID);
@@ -156,7 +155,8 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 					startActivity(i);
 				}
 			}
-		} catch (Exception e) {	}
+		} catch (Exception e) {
+		}
 	}
 
 	private ArrayList<NameValuePair> makePostParams() {
@@ -172,7 +172,7 @@ public class Login extends OuvidoriaActivity implements OnClickListener,
 	public boolean getCheck() {
 		return check;
 	}
-	
+
 	public String getResponseMessage() {
 		return responseMessage;
 	}

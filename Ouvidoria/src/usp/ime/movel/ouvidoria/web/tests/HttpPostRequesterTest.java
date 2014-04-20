@@ -43,7 +43,7 @@ public class HttpPostRequesterTest extends InstrumentationTestCase {
 		client = mock(HttpClient.class);
 		when(factory.makeHttpClient()).thenReturn(client);
 
-		requester = new HttpPostRequester(null, factory, provider);
+		requester = new HttpPostRequester(factory, provider);
 	}
 
 	@UiThreadTest

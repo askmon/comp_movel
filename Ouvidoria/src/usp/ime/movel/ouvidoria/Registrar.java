@@ -152,8 +152,8 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 						return "application/json";
 					}
 				};
-				new HttpPostRequester(this, provider)
-						.asyncPost("http://uspservices.deusanyjunior.dj/incidente");
+				new HttpPostRequester(provider).asyncPost(
+						"http://uspservices.deusanyjunior.dj/incidente", this);
 			} else {
 				Toast.makeText(
 						Registrar.this,

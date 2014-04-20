@@ -37,8 +37,8 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		status = "Carregando";
 		TextView stats = (TextView) findViewById(R.id.textView1);
 		stats.setText(status);
-		new HttpGetRequester(this)
-				.asyncGet("http://uspservices.deusanyjunior.dj/incidente/1.json");
+		new HttpGetRequester().asyncGet(
+				"http://uspservices.deusanyjunior.dj/incidente/1.json", this);
 	}
 
 	@Override
@@ -74,7 +74,8 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 			im4.setImageBitmap(BitmapFromFile(jsons, 3));
 			oc5.setText(parseJSON(jsons, 4));
 			im5.setImageBitmap(BitmapFromFile(jsons, 4));
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 	}
 
 	private String parseJSON(JSONArray array, int index) {
@@ -120,13 +121,12 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		}
 		return f;
 	}
-	
-	private Bitmap BitmapFromFile(JSONArray array, int index){
+
+	private Bitmap BitmapFromFile(JSONArray array, int index) {
 		String photo = null;
 		try {
 			photo = array.getJSONObject(array.length() - 1 - index)
-			.getJSONObject("incidentrecord")
-			.getString("photo");
+					.getJSONObject("incidentrecord").getString("photo");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -140,8 +140,7 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 				System.out.println("bm ta null");
 			bm = Bitmap.createScaledBitmap(bm, 140, 140, true);
 			return bm;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -153,7 +152,7 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 
 	}
 
-	public boolean getCheck(){
+	public boolean getCheck() {
 		return check;
 	}
 }

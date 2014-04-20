@@ -83,7 +83,7 @@ public class LoginTest extends ActivityInstrumentationTestCase2<Login>{
 		// Validate that ReceiverActivity is started
 		TouchUtils.clickView(this, submitButton);
 		Logado logadoActivity = (Logado)
-		        logadoMonitor.waitForActivityWithTimeout(1000);
+		        logadoMonitor.waitForActivityWithTimeout(10000);
 		assertNotNull("logadoActivity is null", logadoActivity);
 		assertEquals("Monitor for logadoActivity has not been called",1, logadoMonitor.getHits());
 		assertEquals("Activity is of wrong type", Logado.class, logadoActivity.getClass());

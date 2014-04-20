@@ -32,7 +32,7 @@ public class HttpGetRequesterTest extends InstrumentationTestCase {
 		this.factory = mock(HttpClientFactory.class);
 		when(factory.makeHttpClient()).thenReturn(client);
 		
-		requester = new HttpGetRequester(null, factory);
+		requester = new HttpGetRequester(factory);
 	}
 	
 	@UiThreadTest
