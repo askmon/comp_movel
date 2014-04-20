@@ -11,51 +11,52 @@ import org.json.JSONObject;
 
 import android.os.AsyncTask;
 
-
 public class HttpGetRequester {
 
 	private OnHttpResponseListener httpResponseListener;
+	private HttpClientFactory clientFactory;
+
+	public HttpGetRequester(OnHttpResponseListener httpResponseListener, HttpClientFactory clientFactory) {
+		this.httpResponseListener = httpResponseListener;
+		this.clientFactory = clientFactory;
+	}
 	
 	public HttpGetRequester(OnHttpResponseListener httpResponseListener) {
-		this.httpResponseListener = httpResponseListener;
+		this(httpResponseListener, new DefaultHttpClientFactory());
 	}
-	
-	public void get(String url) {
+
+	public JSONObject get(String url) {
+		HttpClient httpClient = clientFactory.makeHttpClient();
+		HttpGet get = new HttpGet(url);
+		try {
+			HttpResponse response = httpClient.execute(get);
+			HttpEntity entity = response.getEntity();
+			if (entity != null)
+				return new JSONParser(entity.getContent()).parse();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public void asyncGet(String url) {
 		new HttpGetRequest(httpResponseListener).execute(url);
 	}
-	
-	public class HttpGetRequest extends AsyncTask<String, String, JSONObject> {
 
-		private HttpClientFactory clientFactory;
+	private class HttpGetRequest extends AsyncTask<String, String, JSONObject> {
+
 		private OnHttpResponseListener responseListener;
 
-		public HttpGetRequest(
-				HttpClientFactory clientFactory,
-				OnHttpResponseListener responseListener) {
-			this.clientFactory = clientFactory;
-			this.responseListener = responseListener;
-		}
-
 		public HttpGetRequest(OnHttpResponseListener responseListener) {
-			this(new DefaultHttpClientFactory(), responseListener);
+			this.responseListener = responseListener;
 		}
 
 		@Override
 		protected JSONObject doInBackground(String... params) {
 			String url = params[0];
-			HttpClient httpClient = clientFactory.makeHttpClient();
-			HttpGet get = new HttpGet(url);
-			try {
-				HttpResponse response = httpClient.execute(get);
-				HttpEntity entity = response.getEntity();
-				if (entity != null)
-					return new JSONParser(entity.getContent()).parse();
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
+			return HttpGetRequester.this.get(url);
 		}
 
 		protected void onPostExecute(JSONObject result) {

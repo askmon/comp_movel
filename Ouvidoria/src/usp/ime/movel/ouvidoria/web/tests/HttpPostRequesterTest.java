@@ -33,8 +33,8 @@ public class HttpPostRequesterTest extends InstrumentationTestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-
 		System.setProperty("dexmaker.dexcache", getInstrumentation().getTargetContext().getCacheDir().getPath());
+		
 		provider = mock(HttpEntityProvider.class);
 		requestEntity = mock(HttpEntity.class);
 		when(provider.provideEntity()).thenReturn(requestEntity);

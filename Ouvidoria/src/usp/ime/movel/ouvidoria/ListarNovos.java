@@ -38,7 +38,7 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		TextView stats = (TextView) findViewById(R.id.textView1);
 		stats.setText(status);
 		new HttpGetRequester(this)
-				.get("http://uspservices.deusanyjunior.dj/incidente/1.json");
+				.asyncGet("http://uspservices.deusanyjunior.dj/incidente/1.json");
 	}
 
 	@Override

@@ -1,43 +1,54 @@
 package usp.ime.movel.ouvidoria.web.tests;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
-import junit.framework.TestCase;
-
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import usp.ime.movel.ouvidoria.ListarNovos;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.*;
+import usp.ime.movel.ouvidoria.web.HttpClientFactory;
 import usp.ime.movel.ouvidoria.web.HttpGetRequester;
-import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
+import android.test.InstrumentationTestCase;
 import android.test.UiThreadTest;
 
-public class HttpGetRequesterTest extends TestCase implements OnHttpResponseListener {
+public class HttpGetRequesterTest extends InstrumentationTestCase {
 
-	HttpGetRequester requester;
-	ListarNovos listarNovos;
-	CountDownLatch signal;
+	private HttpGetRequester requester;
+	private HttpClient client;
+	private HttpClientFactory factory;
 	
 	protected void setUp() throws Exception {
 		super.setUp();
+		System.setProperty("dexmaker.dexcache", getInstrumentation().getTargetContext().getCacheDir().getPath());
 		
-		listarNovos = new ListarNovos();
-		signal = new CountDownLatch(1);
-		requester = new HttpGetRequester(listarNovos);
+		this.client = mock(HttpClient.class);
+		this.factory = mock(HttpClientFactory.class);
+		when(factory.makeHttpClient()).thenReturn(client);
+		
+		requester = new HttpGetRequester(null, factory);
 	}
 	
 	@UiThreadTest
-	public void testGet() throws InterruptedException, JSONException {
-		requester.get("http://uspservices.deusanyjunior.dj/incidente/1.json");
-		signal.await(30, TimeUnit.SECONDS);
+	public void testGet() throws InterruptedException, JSONException,
+			ClientProtocolException, IOException {
+		String expectedResponse = "{}"; // TODO usar uma resposta mais realista?
+		JSONObject expectedJSON = new JSONObject(expectedResponse);
+		HttpResponse httpResponse = mock(HttpResponse.class);
+		HttpEntity responseEntity = mock(HttpEntity.class);
 
-		assertTrue(listarNovos.getCheck());
+		when(httpResponse.getEntity()).thenReturn(responseEntity);
+		when(client.execute(isA(HttpGet.class))).thenReturn(httpResponse);
+		when(responseEntity.getContent()).thenReturn(
+				new ByteArrayInputStream(expectedResponse.getBytes()));
+		
+		JSONObject response = requester.get("http://uspservices.deusanyjunior.dj/incidente/1.json");
+		assertEquals(expectedJSON.toString(), response.toString());
 	}
-	
-	@Override
-	public void onHttpResponse(JSONObject response) {
-		signal.countDown();
-	}
-
 }

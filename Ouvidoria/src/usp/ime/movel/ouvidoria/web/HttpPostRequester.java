@@ -11,15 +11,16 @@ import org.json.JSONObject;
 
 import android.os.AsyncTask;
 
-
 public class HttpPostRequester {
 
 	private HttpClientFactory clientFactory;
 	private OnHttpResponseListener httpResponseListener;
 	private HttpEntityProvider entityProvider;
-	
-	public HttpPostRequester(OnHttpResponseListener httpResponseListener, HttpEntityProvider entityProvider) {
-		this(httpResponseListener, new DefaultHttpClientFactory(), entityProvider);
+
+	public HttpPostRequester(OnHttpResponseListener httpResponseListener,
+			HttpEntityProvider entityProvider) {
+		this(httpResponseListener, new DefaultHttpClientFactory(),
+				entityProvider);
 	}
 
 	public HttpPostRequester(OnHttpResponseListener httpResponseListener,
@@ -28,11 +29,7 @@ public class HttpPostRequester {
 		this.entityProvider = entityProvider;
 		this.clientFactory = clientFactory;
 	}
-	
-	public void asyncPost(String url) {
-		new HttpPostRequest(httpResponseListener).execute(url);
-	}
-	
+
 	public JSONObject post(String url) {
 		HttpClient httpClient = clientFactory.makeHttpClient();
 		HttpPost post = new HttpPost(url);
@@ -54,7 +51,11 @@ public class HttpPostRequester {
 		}
 		return null;
 	}
-	
+
+	public void asyncPost(String url) {
+		new HttpPostRequest(httpResponseListener).execute(url);
+	}
+
 	private class HttpPostRequest extends AsyncTask<String, String, JSONObject> {
 
 		private OnHttpResponseListener responseListener;
@@ -66,7 +67,7 @@ public class HttpPostRequester {
 		@Override
 		protected JSONObject doInBackground(String... params) {
 			String url = params[0];
-			return post(url);
+			return HttpPostRequester.this.post(url);
 		}
 
 		protected void onPostExecute(JSONObject result) {
