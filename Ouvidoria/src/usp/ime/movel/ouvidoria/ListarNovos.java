@@ -34,6 +34,7 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 	private int pageNumber;
 	private TextView[] incidentTexts;
 	private ImageView[] incidentImages;
+	private Long[] ids = new Long[5]; 
 	private SQLiteHelper db;
 	private List<Incidente> incidentes;
 
@@ -105,6 +106,7 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 				break;
 			Incidente incidente = incidentes.get(index);
 			incidentTexts[i].setText(makeIncidentText(incidente));
+			ids[i] = incidente.getId();
 			incidentImages[i].setImageBitmap(bitmapFromFile(
 					incidente.getFile64(), index));
 		}
