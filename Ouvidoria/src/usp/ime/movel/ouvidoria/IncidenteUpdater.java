@@ -61,4 +61,8 @@ public class IncidenteUpdater implements OnHttpResponseListener {
 		listener.onIncidenteUpdate();
 	}
 
+	public void cleanCache() {
+		db.resetTables();
+	}
+
 }

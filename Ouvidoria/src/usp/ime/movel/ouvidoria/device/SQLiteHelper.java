@@ -46,16 +46,24 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 			db.execSQL(queryCode);
 		}
 	}
-
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// Drop older books table if existed
-		if (oldVersion <= 4)
-			db.execSQL("DROP TABLE IF EXISTS incidents");
+	
+	public void resetTables(SQLiteDatabase db) {
 		for (String tableName : INCIDENT_TABLES)
 			db.execSQL("DROP TABLE IF EXISTS " + tableName);
 		// create fresh books table
 		this.onCreate(db);
+	}
+	
+	public void resetTables() {
+		resetTables(getWritableDatabase());
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		// Drop older tables if existed
+		if (oldVersion <= 4)
+			db.execSQL("DROP TABLE IF EXISTS incidents");
+		resetTables(db);
 	}
 
 	// --------------------------------------------------------------------------
