@@ -14,8 +14,35 @@ public class Incidente {
 	private String file64 = null;
 	private String description = null;
 	private String localization = null;
+	final public static int PENDING_INCIDENT_TABLE = 0;
+	final public static int STORED_INCIDENT_TABLE = 1;
 
 	public Incidente() {
+	}
+
+	private static Double extractDouble(JSONObject jsonObject, String name) {
+		String inString = jsonObject.optString(name, null);
+		if (inString != null && !inString.equals("null"))
+			return Double.parseDouble(inString);
+		return null;
+	}
+
+	public static Incidente fromJSONObject(JSONObject jsonObject) {
+		Incidente incidente = new Incidente();
+		try {
+			incidente.setUspId(jsonObject.getString("user"));
+			incidente.setUserName(jsonObject.getString("login"));
+			incidente.setDescription(jsonObject.getString("description"));
+			incidente.setLocalization(jsonObject.getString("localization"));
+			if (jsonObject.has("photo"))
+				incidente.setFile64(jsonObject.optString("photo", null));
+			incidente.setLatitude(extractDouble(jsonObject, "latitude"));
+			incidente.setLongitude(extractDouble(jsonObject, "longitude"));
+			return incidente;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public JSONObject toJSONObject() {
@@ -44,21 +71,21 @@ public class Incidente {
 		return null;
 	}
 
-	public void makeCache(SQLiteHelper db) {
+	public void makeCache(SQLiteHelper db, int table) {
 		if (id == null)
-			id = db.addIncident(this, SQLiteHelper.PENDING_INCIDENT_TABLE);
+			id = db.addIncident(this, table);
 		else
-			db.updateIncident(this, SQLiteHelper.PENDING_INCIDENT_TABLE);
+			db.updateIncident(this, table);
 	}
-	
-	public void cleanCache(SQLiteHelper db) {
+
+	public void cleanCache(SQLiteHelper db, int table) {
 		if (id != null)
-			db.removeIncident(this, SQLiteHelper.PENDING_INCIDENT_TABLE);
+			db.removeIncident(this, table);
 	}
 
 	@Override
 	public String toString() {
-		return "[Incidente "+this.id+": "+this.description+"]";
+		return "[Incidente " + this.id + ": " + this.description + "]";
 	}
 
 	public String getUspId() {

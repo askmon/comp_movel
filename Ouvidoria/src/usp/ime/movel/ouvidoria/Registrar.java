@@ -159,7 +159,7 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 						Registrar.this,
 						"Falha ao enviar. Uma nova tentativa será realizada quando possível.",
 						Toast.LENGTH_LONG).show();
-				incidente.makeCache(db);
+				incidente.makeCache(db, Incidente.PENDING_INCIDENT_TABLE);
 				finish();
 			}
 			break;
@@ -199,7 +199,7 @@ public class Registrar extends OuvidoriaActivity implements OnClickListener,
 					Registrar.this,
 					"Falha ao enviar. Uma nova tentativa será realizada quando possível.",
 					Toast.LENGTH_LONG).show();
-			incidente.makeCache(db);
+			incidente.makeCache(db, Incidente.PENDING_INCIDENT_TABLE);
 		} else {
 			Toast.makeText(Registrar.this, "Enviado", Toast.LENGTH_LONG).show();
 			Log.d("Resposta do Incidente", response.toString());

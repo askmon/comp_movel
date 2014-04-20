@@ -1,7 +1,7 @@
 package usp.ime.movel.ouvidoria.device;
 
 import java.lang.reflect.Method;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import usp.ime.movel.ouvidoria.model.Incidente;
@@ -19,8 +19,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	// Database Name
 	private static final String DATABASE_NAME = "OuvidoriaDB";
 	// Table Name
-	public static final String PENDING_INCIDENT_TABLE = "pending_incidents";
-	public static final String STORED_INCIDENT_TABLE = "stored_incidents";
+	private static final String INCIDENT_TABLES[] = {"pending_incidents", "stored_incidents"};
 
 	public SQLiteHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -40,14 +39,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 			else
 				middleQueryCode += " )";
 		}
-		String queryCode = "CREATE TABLE " + PENDING_INCIDENT_TABLE + " ( "
-				+ middleQueryCode;
-		Log.d("DB QUERY", queryCode);
-		db.execSQL(queryCode);
-		queryCode = "CREATE TABLE " + STORED_INCIDENT_TABLE + " ( "
-				+ middleQueryCode;
-		Log.d("DB QUERY", queryCode);
-		db.execSQL(queryCode);
+		for (String tableName : INCIDENT_TABLES) {
+			String queryCode = "CREATE TABLE " + tableName + " ( "
+					+ middleQueryCode;
+			Log.d("DB QUERY", queryCode);
+			db.execSQL(queryCode);
+		}
 	}
 
 	@Override
@@ -55,8 +52,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		// Drop older books table if existed
 		if (oldVersion <= 4)
 			db.execSQL("DROP TABLE IF EXISTS incidents");
-		db.execSQL("DROP TABLE IF EXISTS " + PENDING_INCIDENT_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + STORED_INCIDENT_TABLE);
+		for (String tableName : INCIDENT_TABLES)
+			db.execSQL("DROP TABLE IF EXISTS " + tableName);
 		// create fresh books table
 		this.onCreate(db);
 	}
@@ -116,12 +113,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	}
 
 	// Get All Books
-	public List<Incidente> getAllIncidents(String table) {
+	public List<Incidente> getAllIncidents(int table) {
 
-		List<Incidente> incidents = new LinkedList<Incidente>();
+		List<Incidente> incidents = new ArrayList<Incidente>();
 
 		// 1. build the query
-		String query = "SELECT  * FROM " + table;
+		String query = "SELECT  * FROM " + INCIDENT_TABLES[table];
 
 		// 2. get reference to writable DB
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -169,12 +166,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		return values;
 	}
 
-	public Long addIncident(Incidente incident, String table) {
+	public Long addIncident(Incidente incident, int table) {
 		long id = -1;
 		// 1. get reference to writable DB
 		SQLiteDatabase db = this.getWritableDatabase();
 		// 2. insert
-		id = db.insert(table, // table
+		id = db.insert(INCIDENT_TABLES[table], // table
 				null, // nullColumnHack
 				makeValues(incident)); // key/value -> keys = column names/
 										// values = column values
@@ -184,11 +181,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		return Long.valueOf(id);
 	}
 
-	public void updateIncident(Incidente incident, String table) {
+	public void updateIncident(Incidente incident, int table) {
 		// 1. get reference to writable DB
 		SQLiteDatabase db = this.getWritableDatabase();
 		// 3. updating row
-		db.update(table, // table
+		db.update(INCIDENT_TABLES[table], // table
 				makeValues(incident), // column/value
 				IncidentKey.ID.getColumnName() + " = ?", // selections
 				new String[] { String.valueOf(incident.getId()) }); // selection
@@ -198,11 +195,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		Log.d("updateIncident()", incident.getId().toString());
 	}
 
-	public void removeIncident(Incidente incidente, String table) {
+	public void removeIncident(Incidente incidente, int table) {
 		// 1. get reference to writable DB
 		SQLiteDatabase db = this.getWritableDatabase();
 		// 2. delete
-		db.delete(table, IncidentKey.ID.getColumnName() + " = ?",
+		db.delete(INCIDENT_TABLES[table], IncidentKey.ID.getColumnName() + " = ?",
 				new String[] { String.valueOf(incidente.getId()) });
 		// 3. close
 		db.close();

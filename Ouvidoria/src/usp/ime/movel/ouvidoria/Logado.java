@@ -49,7 +49,7 @@ public class Logado extends OuvidoriaActivity implements OnClickListener,
 	}
 
 	private void checkIncidents() {
-		List<Incidente> incidentes = db.getAllIncidents(SQLiteHelper.PENDING_INCIDENT_TABLE);
+		List<Incidente> incidentes = db.getAllIncidents(Incidente.PENDING_INCIDENT_TABLE);
 		mIncidentCounter.setText("Envios pendentes: " + incidentes.size());
 		if (incidentePendendo != null || incidentes.isEmpty() || !isOkToSend())
 			return;
@@ -107,7 +107,7 @@ public class Logado extends OuvidoriaActivity implements OnClickListener,
 			Toast.makeText(Logado.this, "Pendência enviada", Toast.LENGTH_LONG)
 					.show();
 			Log.d("Resposta do Incidente", response.toString());
-			incidentePendendo.cleanCache(db);
+			incidentePendendo.cleanCache(db, Incidente.PENDING_INCIDENT_TABLE);
 		}
 		incidentePendendo = null;
 		checkIncidents();
