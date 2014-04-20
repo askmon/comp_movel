@@ -111,8 +111,9 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 	}
 
 	private String makeIncidentText(Incidente incidente) {
-		return "Descrição: " + incidente.getDescription() + "\n" + "Local: "
-				+ incidente.getLocalization() + "\n";
+		return "----------\n" + "Descrição: " + incidente.getDescription() + "\n" + "Local: "
+				+ incidente.getLocalization() + "\n" + "Status: "
+						+ incidente.getStatus() + "\n";
 	}
 
 	private File fileFrom64(String file64, String filename) {
