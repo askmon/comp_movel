@@ -17,6 +17,15 @@ public class Mapa extends OuvidoriaActivity implements
 
 	private GoogleMap googleMap;
 	private IncidenteUpdater updater;
+	
+	public Mapa(GoogleMap googleMap) {
+		super();
+		this.googleMap = googleMap;
+	}
+	
+	public Mapa() {
+		super();
+	}
 
 	@SuppressLint("NewApi")
 	@Override
