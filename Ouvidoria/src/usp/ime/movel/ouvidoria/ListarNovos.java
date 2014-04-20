@@ -6,20 +6,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import usp.ime.movel.ouvidoria.device.SQLiteHelper;
 import usp.ime.movel.ouvidoria.model.Incidente;
-import usp.ime.movel.ouvidoria.web.HttpGetRequester;
-import usp.ime.movel.ouvidoria.web.OnHttpResponseListener;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
-import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
 import android.util.Base64;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -33,7 +24,6 @@ import android.widget.TextView;
 public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		OnIncidenteUpdateListener {
 
-	private Intent intent;
 	private String status;
 	private int pageNumber;
 	private TextView[] incidentTexts;
@@ -45,7 +35,6 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listarnovos);
-		intent = getIntent();
 		status = "Carregando";
 		pageNumber = 0;
 		TextView stats = (TextView) findViewById(R.id.textView1);
@@ -100,9 +89,9 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 	}
 
 	private String makeIncidentText(Incidente incidente) {
-		return "----------\n" + "Descrição: " + incidente.getDescription() + "\n" + "Local: "
-				+ incidente.getLocalization() + "\n" + "Status: "
-						+ incidente.getStatus() + "\n";
+		return "----------\n" + "Descrição: " + incidente.getDescription()
+				+ "\n" + "Local: " + incidente.getLocalization() + "\n"
+				+ "Status: " + incidente.getStatus() + "\n";
 	}
 
 	private File fileFrom64(String file64, String filename) {
@@ -146,7 +135,8 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 			pageNumber = Math.max(pageNumber - 1, 0);
 			break;
 		case R.id.right:
-			pageNumber = Math.min(pageNumber + 1, updater.getIncidentes().size() / 5);
+			pageNumber = Math.min(pageNumber + 1, updater.getIncidentes()
+					.size() / 5);
 			break;
 		default:
 			break;
