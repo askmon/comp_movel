@@ -37,7 +37,7 @@ public class Mapa extends OuvidoriaActivity implements OnHttpResponseListener {
 					findFragmentById(R.id.map)).getMap();
         }
 		googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-		new HttpGetRequester(this).get("http://uspservices.deusanyjunior.dj/incidente/1.json");
+		new HttpGetRequester().asyncGet("http://uspservices.deusanyjunior.dj/incidente/1.json", this);
 
 		
 

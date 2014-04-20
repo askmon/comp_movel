@@ -78,8 +78,8 @@ public class Logado extends OuvidoriaActivity implements OnClickListener,
 			}
 		};
 
-		new HttpPostRequester(this, provider)
-				.post("http://uspservices.deusanyjunior.dj/incidente");
+		new HttpPostRequester(provider)
+				.asyncPost("http://uspservices.deusanyjunior.dj/incidente", this);
 	}
 
 	@Override
