@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+     <item   
+    android:id="@+id/aberto"  
+    android:title="@string/aberto"  
+     />  
+     <item   
+    android:id="@+id/andamento"  
+    android:title="@string/andamento"  
+     />  
+     <item   
+    android:id="@+id/oculto"  
+    android:title="@string/oculto"  
+     />  
+     <item   
+    android:id="@+id/resolvido"  
+    android:title="@string/resolvido"  
+     />  
+
+</menu>

@@ -14,6 +14,7 @@ public class Incidente {
 	private String file64 = null;
 	private String description = null;
 	private String localization = null;
+	private String status = "Aberto";
 	final public static int PENDING_INCIDENT_TABLE = 0;
 	final public static int STORED_INCIDENT_TABLE = 1;
 
@@ -32,6 +33,7 @@ public class Incidente {
 		try {
 			incidente.setUspId(jsonObject.getString("user"));
 			incidente.setUserName(jsonObject.getString("login"));
+			incidente.setStatus(jsonObject.getString("status"));
 			incidente.setDescription(jsonObject.getString("description"));
 			incidente.setLocalization(jsonObject.getString("localization"));
 			if (jsonObject.has("photo"))
@@ -52,6 +54,7 @@ public class Incidente {
 			record.put("login", this.getUserName());
 			record.put("description", this.description);
 			record.put("localization", this.localization);
+			record.put("status", this.status);
 			if (this.getFile64() != null)
 				record.put("photo", this.getFile64());
 			if (this.getLatitude() != null && this.getLongitude() != null) {
@@ -150,5 +153,13 @@ public class Incidente {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

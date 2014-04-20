@@ -23,5 +23,9 @@
     <string name="page_next">></string>
     <string name="loading">Carregando...</string>
     <string name="map">Mostrar mapa</string>
+    <string name="aberto">Aberto</string>
+    <string name="andamento">Em andamento</string>
+    <string name="oculto">Oculto</string>
+    <string name="resolvido">Resolvido</string>
 
 </resources>
