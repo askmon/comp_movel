@@ -19,7 +19,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	// Database Name
 	private static final String DATABASE_NAME = "OuvidoriaDB";
 	// Table Name
-	private static final String DATABASE_TABLE = "incidents";
+	private static final String INCIDENT_TABLE = "incidents";
 
 	public SQLiteHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -28,7 +28,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// SQL statement to create book table
-		String queryCode = "CREATE TABLE " + DATABASE_TABLE + " ( ";
+		String queryCode = "CREATE TABLE " + INCIDENT_TABLE + " ( ";
 
 		IncidentKey[] keys = IncidentKey.values();
 		for (int i = 0; i < keys.length; i++) {
@@ -46,7 +46,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// Drop older books table if existed
-		db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + INCIDENT_TABLE);
 		// create fresh books table
 		this.onCreate(db);
 	}
@@ -111,7 +111,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		List<Incidente> incidents = new LinkedList<Incidente>();
 
 		// 1. build the query
-		String query = "SELECT  * FROM " + DATABASE_TABLE;
+		String query = "SELECT  * FROM " + INCIDENT_TABLE;
 
 		// 2. get reference to writable DB
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -164,7 +164,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		// 1. get reference to writable DB
 		SQLiteDatabase db = this.getWritableDatabase();
 		// 2. insert
-		id = db.insert(DATABASE_TABLE, // table
+		id = db.insert(INCIDENT_TABLE, // table
 				null, // nullColumnHack
 				makeValues(incident)); // key/value -> keys = column names/
 										// values = column values
@@ -178,7 +178,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		// 1. get reference to writable DB
 		SQLiteDatabase db = this.getWritableDatabase();
 		// 3. updating row
-		db.update(DATABASE_TABLE, // table
+		db.update(INCIDENT_TABLE, // table
 				makeValues(incident), // column/value
 				IncidentKey.ID.getColumnName() + " = ?", // selections
 				new String[] { String.valueOf(incident.getId()) }); // selection
@@ -192,7 +192,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		// 1. get reference to writable DB
 		SQLiteDatabase db = this.getWritableDatabase();
 		// 2. delete
-		db.delete(DATABASE_TABLE, IncidentKey.ID.getColumnName() + " = ?",
+		db.delete(INCIDENT_TABLE, IncidentKey.ID.getColumnName() + " = ?",
 				new String[] { String.valueOf(incidente.getId()) });
         // 3. close
         db.close();
