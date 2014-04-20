@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
 import android.util.Base64;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -30,7 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
-		OnHttpResponseListener {
+		OnIncidenteUpdateListener {
 
 	private Intent intent;
 	private String status;
@@ -38,8 +39,7 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 	private TextView[] incidentTexts;
 	private ImageView[] incidentImages;
 	private Long[] ids = new Long[5]; 
-	private SQLiteHelper db;
-	private List<Incidente> incidentes;
+	private IncidenteUpdater updater;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +69,8 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		registerForContextMenu(incidentTexts[4]);
 		((Button) findViewById(R.id.left)).setOnClickListener(this);
 		((Button) findViewById(R.id.right)).setOnClickListener(this);
-		db = new SQLiteHelper(this);
-		updateIncidentes();
-		new HttpGetRequester().asyncGet(
-				"http://uspservices.deusanyjunior.dj/incidente/"
-						+ (incidentes.size() + 1) + ".json", this);
+		updater = new IncidenteUpdater(this, this);
+		updater.checkForUpdates();
 	}
 
 	 @Override  
@@ -85,37 +82,11 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 	     m.inflate(R.menu.context, menu);  
 	}  
 	@Override
-	public void onHttpResponse(JSONObject response) {
-		JSONArray jsons = null;
-		try {
-			jsons = response.getJSONArray("incidentrecordlist");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		if (jsons != null)
-			try {
-				for (int i = 0; i < jsons.length(); i++) {
-					Incidente.fromJSONObject(
-							jsons.getJSONObject(i).getJSONObject(
-									"incidentrecord")).makeCache(db,
-							Incidente.STORED_INCIDENT_TABLE);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		updateIncidentes();
-	}
-
-	private void updateIncidentes() {
-		incidentes = db.getAllIncidents(Incidente.STORED_INCIDENT_TABLE);
-		updateList();
-	}
-
-	private void updateList() {
+	public void onIncidenteUpdate() {
 		TextView stats = (TextView) findViewById(R.id.textView1);
 		stats.setText("Incidentes " + (5 * pageNumber + 1) + " a "
 				+ (5 * (pageNumber + 1)));
-
+		List<Incidente> incidentes = updater.getIncidentes();
 		for (int i = 0; i < 5; i++) {
 			int index = 5 * pageNumber + i;
 			if (index >= incidentes.size())
@@ -175,11 +146,11 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 			pageNumber = Math.max(pageNumber - 1, 0);
 			break;
 		case R.id.right:
-			pageNumber = Math.min(pageNumber + 1, incidentes.size() / 5);
+			pageNumber = Math.min(pageNumber + 1, updater.getIncidentes().size() / 5);
 			break;
 		default:
 			break;
 		}
-		updateList();
+		onIncidenteUpdate();
 	}
 }
