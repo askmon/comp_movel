@@ -20,6 +20,7 @@ public class LogadoOuvidor extends OuvidoriaActivity implements OnClickListener 
 	private Button mListOculto;
 	private Button mListSolved;
 	private Button mSearchlocal;
+	private Button mSearchdescricao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,8 @@ public class LogadoOuvidor extends OuvidoriaActivity implements OnClickListener 
 		mListSolved.setOnClickListener(this);
 		mSearchlocal = (Button) findViewById(R.id.searchlocal);
 		mSearchlocal.setOnClickListener(this);
+		mSearchdescricao = (Button) findViewById(R.id.searchdescricao);
+		mSearchdescricao.setOnClickListener(this);
 	}
 
 	@Override
@@ -98,6 +101,10 @@ public class LogadoOuvidor extends OuvidoriaActivity implements OnClickListener 
 				break;
 			case R.id.searchlocal:
 				i = new Intent(LogadoOuvidor.this, BuscaLocal.class);
+				startActivity(i);
+				break;
+			case R.id.searchdescricao:
+				i = new Intent(LogadoOuvidor.this, BuscaDescricao.class);
 				startActivity(i);
 				break;
 			default:

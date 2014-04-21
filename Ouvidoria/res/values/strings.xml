@@ -33,7 +33,9 @@
     <string name="listoculto">Listar ocultos</string>
     <string name="listsolved">Listar resolvidos</string>
     <string name="searchlocal">Buscar por local</string>
+    <string name="searchdescricao">Buscar por descrição</string>
     <string name="digitelocal">Digite o nome do local:</string>
+    <string name="digitedescricao">Digite termo(s) da descrição:</string>
     <string name="submit">Listar</string>
     
 </resources>
