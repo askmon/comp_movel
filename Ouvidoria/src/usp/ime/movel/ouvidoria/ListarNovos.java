@@ -251,6 +251,7 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 				+ "Status: " + incidente.getStatus() + "\n";
 	}
 
+	//Recebe uma string de um binario em Base64 e devolve o arquivo
 	private File fileFrom64(String file64, String filename) {
 		byte[] btDataFile = Base64.decode(file64, 0);
 		File f = new File(filename);
@@ -268,6 +269,7 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 		return f;
 	}
 
+	//Recebe um arquivo e devolve o bitmap para poder exibir na tela
 	private Bitmap bitmapFromFile(String data, int index) {
 		File f = fileFrom64(data, Environment.getExternalStorageDirectory()
 				.toString() + "/ouvidoria" + index + ".jpg");
