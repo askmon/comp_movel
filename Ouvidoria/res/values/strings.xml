@@ -28,5 +28,9 @@
     <string name="andamento">Em andamento</string>
     <string name="oculto">Oculto</string>
     <string name="resolvido">Resolvido</string>
-
+    <string name="listopen">Listar abertos</string>
+    <string name="listsolving">Listar em andamento</string>
+    <string name="listoculto">Listar ocultos</string>
+    <string name="listsolved">Listar resolvidos</string>
+    
 </resources>
