@@ -32,5 +32,8 @@
     <string name="listsolving">Listar em andamento</string>
     <string name="listoculto">Listar ocultos</string>
     <string name="listsolved">Listar resolvidos</string>
+    <string name="searchlocal">Buscar por local</string>
+    <string name="digitelocal">Digite o nome do local:</string>
+    <string name="submit">Listar</string>
     
 </resources>
