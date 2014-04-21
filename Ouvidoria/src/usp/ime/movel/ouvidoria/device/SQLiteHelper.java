@@ -15,11 +15,12 @@ import android.util.Log;
 public class SQLiteHelper extends SQLiteOpenHelper {
 
 	// Database Version
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 6;
 	// Database Name
 	private static final String DATABASE_NAME = "OuvidoriaDB";
 	// Table Name
-	private static final String INCIDENT_TABLES[] = {"pending_incidents", "stored_incidents"};
+	private static final String INCIDENT_TABLES[] = { "pending_incidents",
+			"stored_incidents" };
 
 	public SQLiteHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -46,14 +47,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 			db.execSQL(queryCode);
 		}
 	}
-	
+
 	public void resetTables(SQLiteDatabase db) {
 		for (String tableName : INCIDENT_TABLES)
 			db.execSQL("DROP TABLE IF EXISTS " + tableName);
 		// create fresh books table
 		this.onCreate(db);
 	}
-	
+
 	public void resetTables() {
 		resetTables(getWritableDatabase());
 	}
@@ -69,8 +70,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	// --------------------------------------------------------------------------
 
 	enum IncidentKey {
-		ID("INTEGER PRIMARY KEY AUTOINCREMENT"), USPID("TEXT"), USERNAME("TEXT"), LATITUDE(
-				"DOUBLE"), LONGITUDE("DOUBLE"), FILE64("TEXT"), DESCRIPTION(
+		ID("INTEGER PRIMARY KEY AUTOINCREMENT"), USPID("TEXT"), USERNAME("TEXT"), STATUS(
+				"TEXT"), LATITUDE("DOUBLE"), LONGITUDE("DOUBLE"), FILE64("TEXT"), DESCRIPTION(
 				"TEXT"), LOCALIZATION("TEXT");
 		private String columnName;
 		private String type;
@@ -207,8 +208,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		// 1. get reference to writable DB
 		SQLiteDatabase db = this.getWritableDatabase();
 		// 2. delete
-		db.delete(INCIDENT_TABLES[table], IncidentKey.ID.getColumnName() + " = ?",
-				new String[] { String.valueOf(incidente.getId()) });
+		db.delete(INCIDENT_TABLES[table], IncidentKey.ID.getColumnName()
+				+ " = ?", new String[] { String.valueOf(incidente.getId()) });
 		// 3. close
 		db.close();
 	}
