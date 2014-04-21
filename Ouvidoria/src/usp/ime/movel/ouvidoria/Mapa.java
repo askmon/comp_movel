@@ -30,6 +30,7 @@ public class Mapa extends OuvidoriaActivity implements
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		System.out.println("VEM PRA CÁ********************************************************");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mapa);
 		Toast.makeText(Mapa.this, "Aguarde carregamento das ocorrências",
@@ -37,6 +38,12 @@ public class Mapa extends OuvidoriaActivity implements
 		if (googleMap == null) {
 			googleMap = ((MapFragment) getFragmentManager().findFragmentById(
 					R.id.map)).getMap();
+			System.out.println("NUUUUULL **************************");
+		}
+		if (googleMap == null) {
+			System.out.println("CONTINUA NUUUUUUUUUUUUUUUUULLLL************************");
+			System.out.println(((MapFragment) getFragmentManager().findFragmentById(
+					R.id.map)).getMap() + "------------------------------------------");
 		}
 		googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 		updater = new IncidenteUpdater(this, this);
