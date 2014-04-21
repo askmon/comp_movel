@@ -15,6 +15,10 @@ public class LogadoOuvidor extends OuvidoriaActivity implements OnClickListener 
 	private String uspid;
 	private Button mListnew;
 	private Button mShowmap;
+	private Button mListOpen;
+	private Button mListSolving;
+	private Button mListOculto;
+	private Button mListSolved;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,14 @@ public class LogadoOuvidor extends OuvidoriaActivity implements OnClickListener 
 		mListnew.setOnClickListener(this);
 		mListnew = (Button) findViewById(R.id.showmap);
 		mListnew.setOnClickListener(this);
+		mListOpen = (Button) findViewById(R.id.listopen);
+		mListOpen.setOnClickListener(this);
+		mListSolving = (Button) findViewById(R.id.listsolving);
+		mListSolving.setOnClickListener(this);
+		mListOculto = (Button) findViewById(R.id.listoculto);
+		mListOculto.setOnClickListener(this);
+		mListSolved = (Button) findViewById(R.id.listsolved);
+		mListSolved.setOnClickListener(this);
 	}
 
 	@Override
@@ -45,6 +57,34 @@ public class LogadoOuvidor extends OuvidoriaActivity implements OnClickListener 
 			switch (v.getId()) {
 			case R.id.listnew:
 				i = new Intent(LogadoOuvidor.this, ListarNovos.class);
+				i.putExtra("username", username);
+				i.putExtra("uspid", uspid);
+				startActivity(i);
+				break;
+			case R.id.listopen:
+				System.out.println("Aqui");
+				i = new Intent(LogadoOuvidor.this, ListarAbertos.class);
+				i.putExtra("username", username);
+				i.putExtra("uspid", uspid);
+				startActivity(i);
+				break;
+			case R.id.listsolving:
+				System.out.println("Aqui");
+				i = new Intent(LogadoOuvidor.this, ListarAndamento.class);
+				i.putExtra("username", username);
+				i.putExtra("uspid", uspid);
+				startActivity(i);
+				break;
+			case R.id.listoculto:
+				System.out.println("Aqui");
+				i = new Intent(LogadoOuvidor.this, ListarOcultos.class);
+				i.putExtra("username", username);
+				i.putExtra("uspid", uspid);
+				startActivity(i);
+				break;
+			case R.id.listsolved:
+				System.out.println("Aqui");
+				i = new Intent(LogadoOuvidor.this, ListarResolvidos.class);
 				i.putExtra("username", username);
 				i.putExtra("uspid", uspid);
 				startActivity(i);

@@ -14,7 +14,7 @@ public class Incidente {
 	private String file64 = null;
 	private String description = null;
 	private String localization = null;
-	private String status = "Aberto";
+	private String status = null;
 	final public static int PENDING_INCIDENT_TABLE = 0;
 	final public static int STORED_INCIDENT_TABLE = 1;
 

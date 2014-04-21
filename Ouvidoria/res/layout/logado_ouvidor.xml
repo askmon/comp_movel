@@ -27,6 +27,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/map" />
+     
+     <Button
+        android:id="@+id/listopen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/listopen" />
+     
+     <Button
+        android:id="@+id/listsolving"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/listsolving" />
+     
+     <Button
+        android:id="@+id/listoculto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/listoculto" />
+     
+     <Button
+        android:id="@+id/listsolved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/listsolved" />
     
 
 </LinearLayout>
