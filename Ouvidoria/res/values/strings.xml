@@ -22,7 +22,7 @@
     <string name="page_before">&lt;</string>
     <string name="page_next">></string>
     <string name="clean_cache">Recarregar</string>
-    <string name="loading">Carregando...</string>
+    <string name="loading">Carregando</string>
     <string name="map">Mostrar mapa</string>
     <string name="aberto">Aberto</string>
     <string name="andamento">Em andamento</string>
