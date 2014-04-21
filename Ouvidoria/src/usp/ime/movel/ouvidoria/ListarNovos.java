@@ -37,7 +37,7 @@ public class ListarNovos extends OuvidoriaActivity implements OnClickListener,
 	private Long[] ids = new Long[5];
 	private IncidenteUpdater updater;
 	private int id;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
