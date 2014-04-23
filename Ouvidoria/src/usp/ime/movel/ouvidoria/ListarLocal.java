@@ -309,7 +309,7 @@ public class ListarLocal extends OuvidoriaActivity implements OnClickListener,
 		case R.id.left:
 			pageNumber = Math.max(pageNumber - 1, 0);
 			onIncidenteUpdate();
-			j = j - 5;
+			j = 5 * pageNumber;
 			break;
 		case R.id.right:
 			pageNumber = Math.min(pageNumber + 1, updater.getIncidentes()
