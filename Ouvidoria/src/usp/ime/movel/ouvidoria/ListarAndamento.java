@@ -304,7 +304,7 @@ public class ListarAndamento extends OuvidoriaActivity implements OnClickListene
 		case R.id.left:
 			pageNumber = Math.max(pageNumber - 1, 0);
 			onIncidenteUpdate();
-			j = j - 5;
+			j = 5 * pagenumber;
 			break;
 		case R.id.right:
 			pageNumber = Math.min(pageNumber + 1, updater.getIncidentes()
