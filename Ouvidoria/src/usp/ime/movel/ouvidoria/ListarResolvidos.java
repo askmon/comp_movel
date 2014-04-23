@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -38,6 +39,7 @@ public class ListarResolvidos extends OuvidoriaActivity implements OnClickListen
 	private IncidenteUpdater updater;
 	private int id;
 	int j = 0;
+	ArrayList<Incidente> incid = new ArrayList();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,32 +90,28 @@ public class ListarResolvidos extends OuvidoriaActivity implements OnClickListen
 	@Override
 	public void onIncidenteUpdate() {
 		List<Incidente> incidentes = updater.getIncidentes();
-		if(j >= incidentes.size()){
-			return;
+		incid.clear();
+		for(j = 0; j < incidentes.size(); j++){
+			if(incidentes.get(j).getStatus().equals("Resolvido")){
+				incid.add(incidentes.get(j));
+			}
 		}
 		TextView stats = (TextView) findViewById(R.id.textView1);
 		stats.setText("Incidentes " + (5 * pageNumber + 1) + " a "
 				+ (5 * (pageNumber + 1)));
 		for (int i = 0; i < 5; i++) {
-			int index = j;
-			if (index >= incidentes.size()) {
+			int index = 5 * pageNumber + i;
+			if (index >= incid.size()) {
 				incidentTexts[i].setText(null);
 				incidentImages[i].setImageBitmap(null);
 				ids[i] = null;
 			} else {
-				Incidente incidente = incidentes.get(index);
-				if(incidente.getStatus().equals("Resolvido")){
-					incidentTexts[i].setText(makeIncidentText(incidente));
-					ids[i] = incidente.getId();
-					incidentImages[i].setImageBitmap(bitmapFromFile(
-							incidente.getFile64(), index));
-				}
-				else{
-					if(index < incidentes.size())
-						i--;
-				}
+				Incidente incidente = incid.get(index);
+				incidentTexts[i].setText(makeIncidentText(incidente));
+				ids[i] = incidente.getId();
+				incidentImages[i].setImageBitmap(bitmapFromFile(
+						incidente.getFile64(), index));
 			}
-			j++;
 		}
 	}
 
@@ -304,10 +302,9 @@ public class ListarResolvidos extends OuvidoriaActivity implements OnClickListen
 		case R.id.left:
 			pageNumber = Math.max(pageNumber - 1, 0);
 			onIncidenteUpdate();
-			j = 5 * pageNumber;
 			break;
 		case R.id.right:
-			pageNumber = Math.min(pageNumber + 1, updater.getIncidentes()
+			pageNumber = Math.min(pageNumber + 1, incid
 					.size() / 5);
 			onIncidenteUpdate();
 			break;
